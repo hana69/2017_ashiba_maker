@@ -1,8 +1,10 @@
 #include "main.h"
 
 CMain::CMain()
+	:Scaffold(0,0,WINDOW_HEIGHT,WINDOW_WIDTH)
 {
 	frame = tempframe=0;
+	//scene = TITLE;
 	scene = MAIN;
 }
 ///////////パブリック関数///////////////
@@ -15,10 +17,14 @@ void CMain::GameLoop(){
 	
 	switch (scene) {
 	case TITLE:
-
+		DrawString(0,0,"たいとる",RED);
+		if(Key.Pushed( KEYNAME.ENTER ) ){
+			scene=MAIN;
+		}
+		
 		break;
 	case MAIN:
-		DrawBox(0,0,50,50,RED,true);
+		Scaffold.DrawField();
 		break;
 	}
 	frame++;

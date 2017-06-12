@@ -12,10 +12,14 @@ public:
 	bool LeftReleased();
 	bool RightReleased();
 
-	void SetTemp();
+	void SetTemp();	//最近左クリックしたときの座標を保存
+
+	int TempX(){return tempX;};
+	int TempY(){return tempY;};
 
 	int GetChangeX();//SetTempで設定した座標からの変位のＸ成分を返す
 	int GetChangeY();//SetTempで設定した座標からの変位のＹ成分を返す
+		
 	bool GetFlag();
 
 private:

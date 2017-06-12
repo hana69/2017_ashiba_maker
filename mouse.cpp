@@ -49,30 +49,31 @@ bool CMouse::LeftReleased(){
 
 void CMouse::SetTemp(){
 	GetMousePoint(&x,&y);
-
-	if( Insided() &&  GetMouseInput()&(MOUSE_INPUT_LEFT != 0) && flag==false ){
-		flag=true;
-		tempX=x;
-		tempY=y;
+	if( Insided() ){
+		if(flag == false ){//‰Ÿ‚³‚ê‚Ä‚È‚¢‚Æ‚«
+			if( GetMouseInput()&(MOUSE_INPUT_LEFT != 0) ){
+				flag=true;
+				tempX=x;
+				tempY=y;
+			}
+		}else{
+			if( !(GetMouseInput() &(MOUSE_INPUT_LEFT!=0) ) ){
+				flag=false;
+			}
+		}
 	}
-
-	if( !(GetMouseInput() &(MOUSE_INPUT_LEFT!=0) ) && flag == true  ){
-		flag=false;
-	}
-
-		tempX=x;
-		tempY=y;
 
 }
 
 int CMouse::GetChangeX(){
 	GetMousePoint(&x,&y);
-	return tempX-x;
+	return x-tempX;
 }
 int CMouse::GetChangeY(){
 	GetMousePoint(&x,&y);
-	return tempY-y;
+	return y-tempY;
 }
+
 bool CMouse::GetFlag(){
 	return flag;
 }

@@ -1,6 +1,6 @@
 #pragma once
-#include"DxLib.h"
-#include"General.h"
+#include"scaffold.h"
+#include"key.h"
 
 class CMain{
 public:
@@ -18,4 +18,5 @@ private:
 	int backPic;
 	int titleBGM;
 
+	CScaffold Scaffold;
 };

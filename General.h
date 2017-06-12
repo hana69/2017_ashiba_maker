@@ -2,7 +2,10 @@
 
 #include<string>
 /////ゲーム用定数/////
-
+enum ScaffoldType{
+	NORMAL,
+	ScaffoldTypeNum
+};
 
 //////////////////鼻ライブラリver0
 
