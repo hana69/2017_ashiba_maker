@@ -17,14 +17,12 @@ public:
 	int TempX(){return tempX;};
 	int TempY(){return tempY;};
 
-	int GetChangeX();//SetTemp‚Åİ’è‚µ‚½À•W‚©‚ç‚Ì•ÏˆÊ‚Ì‚w¬•ª‚ğ•Ô‚·
-	int GetChangeY();//SetTemp‚Åİ’è‚µ‚½À•W‚©‚ç‚Ì•ÏˆÊ‚Ì‚x¬•ª‚ğ•Ô‚·
+	int ChangeX();//SetTemp‚Åİ’è‚µ‚½À•W‚©‚ç‚Ì•ÏˆÊ‚Ì‚w¬•ª‚ğ•Ô‚·
+	int ChangeY();//SetTemp‚Åİ’è‚µ‚½À•W‚©‚ç‚Ì•ÏˆÊ‚Ì‚x¬•ª‚ğ•Ô‚·
 		
-	bool GetFlag();
-
-private:
+	bool Flag();
 	bool Insided();
-
+private:
 	bool flag;
 	bool rightFlag;
 

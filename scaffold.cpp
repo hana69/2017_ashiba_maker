@@ -4,7 +4,7 @@
 
 ////////コンストラクタ//////////
 CScaffold::CScaffold(int _x1,int _y1,int _x2,int _y2)
-:Mouse(_x1,_y1,_x2,_y2)
+:DrawField(_x1,_y1,_x2,_y2)
 {
 	SetDrawFieldRange(_x1,_y1,_x2,_y2);
 	for(int i = 0; i < ScaffoldTypeNum; i++){
@@ -17,30 +17,12 @@ CScaffold::CScaffold(int _x1,int _y1,int _x2,int _y2)
 	}
 }
 ///////public1関数/////////////
-void CScaffold::DrawField(){
-	Mouse.SetTemp();
+void CScaffold::Main(){
 	if(scaffoldGraph[0]==-2){
 		LoadScaffoldGraph();
 	}
+	DrawField.Emerge();
 
-	if(Mouse.GetFlag()==true){
-		if(){
-			for(int i = Mouse.TempX(); i < Mouse.TempX()+Mouse.GetChangeX() ; i+=50){
-				for(int j = Mouse.TempY();j < Mouse.TempY() + Mouse.GetChangeY(); j+=50){
-					DrawBox(i , j , i+50 , j+50 , RED , true);
-					DrawBox(i , j , i+50 , j+50 , WHITE , false);
-				}
-			}
-		}else{
-			for(int i = Mouse.TempX(); i > Mouse.TempX()+Mouse.GetChangeX() ; i-=50){
-				for(int j = Mouse.TempY();j < Mouse.TempY() + Mouse.GetChangeY(); j+=50){
-					DrawBox(i , j , i+50 , j+50 , RED , true);
-					DrawBox(i , j , i+50 , j+50 , WHITE , false);
-				}
-			}
-		}
-	}
-	
 	SelectField();
 }
 
@@ -52,7 +34,7 @@ void CScaffold::SelectField(){
 
 //////private関数/////////////
 void CScaffold::SetDrawFieldRange(int _x1,int _y1,int _x2,int _y2){
-	Mouse.SetRange(_x1,_y1,_x2,_y2);
+	DrawField.SetRange(_x1,_y1,_x2,_y2);
 }
 
 void CScaffold::LoadScaffoldGraph(){
@@ -60,4 +42,71 @@ void CScaffold::LoadScaffoldGraph(){
 		scaffoldGraph[i] = LoadGraph(graphName[i].c_str());
 	}
 }
+
+////////////////CDrawField//////////////////////
+
+/////////////コンストラクタ///////////////////
+
+CDrawField::CDrawField(int _x1,int _y1,int _x2,int _y2)
+:Mouse(_x1,_y1,_x2,_y2)
+{
+	SetRange(_x1,_y1,_x2,_y2);
+}
+/////////////public関数//////////////////////
+void CDrawField::Emerge(){
+	DrawBox( x1, y1 , x2 , y2 , WHITE , false);
+	Draw();
+}
+
+void CDrawField::SetRange(int _x1,int _y1,int _x2,int _y2){
+	x1 = _x1;
+	x2 = _x2;
+	y1 = _y1;
+	y2 = _y2;
+	Mouse.SetRange(_x1,_y1,_x2,_y2);
+}
+
+////////////private関数//////////////////////
+
+void CDrawField::Draw(){
+	Mouse.SetTemp();
+
+	if(Mouse.Flag()==true && Mouse.Insided()){	
+		if(Mouse.ChangeX() >= 50 ){
+			if(Mouse.ChangeY() >= 50){
+				for(int i = Mouse.TempX(); i < Mouse.TempX() + Mouse.ChangeX() ; i += 50 ){
+					for(int j = Mouse.TempY();j < Mouse.TempY() + Mouse.ChangeY(); j += 50 ){
+						DrawBox(i , j , i + 50 , j + 50 , RED , true);
+						DrawBox(i , j , i + 50 , j + 50 , WHITE , false);
+					}
+				}
+			}else if(Mouse.ChangeY() <= -50){
+				for(int i = Mouse.TempX(); i < Mouse.TempX() + Mouse.ChangeX() ; i += 50 ){
+					for(int j = Mouse.TempY();j > Mouse.TempY() + Mouse.ChangeY(); j -= 50 ){
+						DrawBox(i , j , i + 50 , j - 50 , RED , true);
+						DrawBox(i , j , i + 50 , j - 50 , WHITE , false);
+					}
+				}
+			}
+		}else if(Mouse.ChangeX() <= -50 ){
+			if(Mouse.ChangeY() >= 50){
+				for(int i = Mouse.TempX(); i > Mouse.TempX() + Mouse.ChangeX() ; i -= 50 ){
+					for(int j = Mouse.TempY();j < Mouse.TempY() + Mouse.ChangeY(); j += 50 ){
+						DrawBox(i , j , i - 50 , j + 50 , RED , true);
+						DrawBox(i , j , i - 50 , j + 50 , WHITE , false);
+					}
+				}
+			}else if(Mouse.ChangeY() <= -50){
+				for(int i = Mouse.TempX(); i > Mouse.TempX() + Mouse.ChangeX() ; i -= 50 ){
+					for(int j = Mouse.TempY();j > Mouse.TempY() + Mouse.ChangeY(); j -= 50 ){
+						DrawBox(i , j , i - 50 , j - 50 , RED , true);
+						DrawBox(i , j , i - 50 , j - 50 , WHITE , false);
+					}
+				}
+			}
+		}
+		
+	}
+}
+
 

@@ -49,13 +49,14 @@ bool CMouse::LeftReleased(){
 
 void CMouse::SetTemp(){
 	GetMousePoint(&x,&y);
+	
 	if( Insided() ){
 		if(flag == false ){//押されてないとき
 			if( GetMouseInput()&(MOUSE_INPUT_LEFT != 0) ){
 				flag=true;
-				tempX=x;
-				tempY=y;
 			}
+			tempX=x;
+			tempY=y;
 		}else{
 			if( !(GetMouseInput() &(MOUSE_INPUT_LEFT!=0) ) ){
 				flag=false;
@@ -65,20 +66,32 @@ void CMouse::SetTemp(){
 
 }
 
-int CMouse::GetChangeX(){
+int CMouse::ChangeX(){
 	GetMousePoint(&x,&y);
 	return x-tempX;
 }
-int CMouse::GetChangeY(){
+int CMouse::ChangeY(){
 	GetMousePoint(&x,&y);
 	return y-tempY;
 }
 
-bool CMouse::GetFlag(){
+bool CMouse::Flag(){
+	if( Insided() ){
+		if(flag == false ){//押されてないとき
+			if( GetMouseInput()&(MOUSE_INPUT_LEFT != 0) ){
+				flag=true;
+			}
+		}else{
+			if( !(GetMouseInput() &(MOUSE_INPUT_LEFT!=0) ) ){
+				flag=false;
+			}
+		}
+	}
 	return flag;
 }
-///////////////////////プライベート関数///////////////////////////////////
+
 bool CMouse::Insided(){
+	GetMousePoint(&x,&y);
 	if(rangeX1 < x && x < rangeX2 && rangeY1 < y &&  y < rangeY2){
 		return true;
 	}

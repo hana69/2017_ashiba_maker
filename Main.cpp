@@ -1,7 +1,7 @@
 #include "main.h"
 
 CMain::CMain()
-	:Scaffold(0,0,WINDOW_HEIGHT,WINDOW_WIDTH)
+	:Scaffold(0,0,WINDOW_WIDTH,WINDOW_HEIGHT)
 {
 	frame = tempframe=0;
 	//scene = TITLE;
@@ -24,7 +24,7 @@ void CMain::GameLoop(){
 		
 		break;
 	case MAIN:
-		Scaffold.DrawField();
+		Scaffold.Main();
 		break;
 	}
 	frame++;
