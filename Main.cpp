@@ -1,11 +1,12 @@
 #include "main.h"
 
 CMain::CMain()
-	:Scaffold(0,0,WINDOW_WIDTH,WINDOW_HEIGHT)
+	:Title_S(&Main_S),
+	Main_S(&Title_S)
 {
 	frame = tempframe=0;
 	//scene = TITLE;
-	scene = MAIN;
+	scene = (CScene*)&Title_S;
 }
 ///////////パブリック関数///////////////
 void CMain::Awake(){
@@ -15,17 +16,9 @@ void CMain::Awake(){
 
 void CMain::GameLoop(){
 	
-	switch (scene) {
-	case TITLE:
-		DrawString(0,0,"たいとる",RED);
-		if(Key.Pushed( KEYNAME.ENTER ) ){
-			scene=MAIN;
-		}
-		
-		break;
-	case MAIN:
-		Scaffold.Main();
-		break;
+	scene->Update();
+	if (scene -> Changed()) {
+		scene = (CScene*)scene->Next();
 	}
 	frame++;
 }

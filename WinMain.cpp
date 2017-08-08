@@ -22,6 +22,9 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
 			loopEscapeFlag = false;
 			break;
 		}*/
+		if (Key.Pushed(KEYNAME.ESC)) {
+			break;
+		}
 		Sleep(0);
 	}
         

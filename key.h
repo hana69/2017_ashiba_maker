@@ -10,6 +10,7 @@ static struct {
 	const int L_SHIFT;
 	const int R_SHIFT;
 	const int SPACE;
+	const int ESC;
 	const int LEFT;
 	const int UP;
 	const int RIGHT;
@@ -27,6 +28,7 @@ static struct {
 	KEY_INPUT_LSHIFT,
 	KEY_INPUT_RSHIFT,
 	KEY_INPUT_SPACE,
+	KEY_INPUT_ESCAPE,
 	KEY_INPUT_LEFT,
 	KEY_INPUT_UP,
 	KEY_INPUT_RIGHT,

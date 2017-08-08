@@ -5,7 +5,8 @@
 
 class CMouse{
 public:
-	CMouse(int _x1,int _y1,int _x2,int _y2);//コンストラクタで範囲の指定を行う
+	CMouse();
+	CMouse(int _x1, int _y1, int _x2, int _y2);//コンストラクタで範囲の指定を行う
 
 	void SetRange(int _x1,int _y1,int _x2,int _y2);//範囲の指定
 
@@ -20,11 +21,9 @@ public:
 	int ChangeX();//SetTempで設定した座標からの変位のＸ成分を返す
 	int ChangeY();//SetTempで設定した座標からの変位のＹ成分を返す
 		
-	bool Flag();
+	bool LeftPushing();
 	bool Insided();
 private:
-	bool flag;
-	bool rightFlag;
 
 	int x,y;
 

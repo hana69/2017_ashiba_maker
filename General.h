@@ -12,7 +12,7 @@ enum ScaffoldType{
 //#define IDI_ICON1 101
 
 #define WINDOW_WIDTH 1000
-#define WINDOW_HEIGHT 480
+#define WINDOW_HEIGHT 720
 
 #define RED GetColor( 255 , 0 , 0 )
 #define GREEN GetColor( 0 , 255 , 0 )

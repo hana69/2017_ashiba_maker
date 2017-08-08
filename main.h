@@ -1,6 +1,6 @@
 #pragma once
-#include"scaffold.h"
-#include"key.h"
+
+#include"Scene.h"
 
 class CMain{
 public:
@@ -10,13 +10,13 @@ public:
 private:
 	int frame,tempframe;
 	
-	enum{
-		TITLE,
-		MAIN
-	}scene;
-	
 	int backPic;
 	int titleBGM;
 
-	CScaffold Scaffold;
+	CScene* scene;
+
+	const CTitle_S Title_S;
+	const CMain_S Main_S;
+
+	//CScaffold Scaffold;
 };
