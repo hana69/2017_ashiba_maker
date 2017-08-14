@@ -20,6 +20,37 @@ void CMouse::SetRange(int _x1,int _y1,int _x2,int _y2){
 	rangeY2 = _y2;
 }
 
+
+bool CMouse::RightPushed() {
+	static bool flag = false;
+
+	if (flag == false && GetMouseInput() &(MOUSE_INPUT_RIGHT != 0)) {
+		flag = true;
+		return true;
+	}
+	
+	if (flag == true && !(GetMouseInput() &(MOUSE_INPUT_RIGHT != 0))) {
+		flag = false;
+	}
+
+	return false;
+
+}
+bool CMouse::LeftPushed() {
+	static bool flag = false;
+
+	if ( flag == false && GetMouseInput()&(MOUSE_INPUT_LEFT != 0) ) {
+		flag = true;
+		return true;
+	}
+	
+	if (flag == true && !(GetMouseInput()&(MOUSE_INPUT_LEFT != 0))) {
+		flag = false;
+	}
+
+	return false;
+}
+
 bool CMouse::RightReleased(){
 	static bool flag=false;
 	if( flag==false && GetMouseInput() &(MOUSE_INPUT_RIGHT != 0) ){
@@ -47,21 +78,8 @@ bool CMouse::LeftReleased(){
 
 void CMouse::SetTemp(){
 	GetMousePoint(&x,&y);
-	static bool flag = false;
-	if( Insided() ){
-		if(flag == false ){//‰Ÿ‚³‚ê‚Ä‚È‚¢‚Æ‚«
-			if( GetMouseInput()&(MOUSE_INPUT_LEFT != 0) ){
-				flag =true;
-			}
-			tempX=x;
-			tempY=y;
-		}else{
-			if( !(GetMouseInput() &(MOUSE_INPUT_LEFT!=0) ) ){
-				flag =false;
-			}
-		}
-	}
-
+	tempX=x;
+	tempY=y;
 }
 
 int CMouse::ChangeX(){

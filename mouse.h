@@ -10,10 +10,13 @@ public:
 
 	void SetRange(int _x1,int _y1,int _x2,int _y2);//範囲の指定
 
+	bool LeftPushed();
+	bool RightPushed();
+
 	bool LeftReleased();
 	bool RightReleased();
 
-	void SetTemp();	//最近左クリックしたときの座標を保存
+	void SetTemp();	//呼び出された瞬間の座標をtempに保存
 
 	int TempX(){return tempX;};
 	int TempY(){return tempY;};

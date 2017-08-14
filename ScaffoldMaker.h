@@ -5,10 +5,15 @@ class CDrawField {
 public:
 	CDrawField(int _x1, int _y1, int _x2, int _y2);
 	void Update(int _selectingGraph);
+	bool DrawFinished() {
+		return drawFinished;
+	}
 private:
 	void Draw(int _selectingGraph);
-	int x1, x2, y1, y2;
 
+	int x1, x2, y1, y2;
+	bool writing;
+	bool drawFinished;
 	CMouse Mouse;
 };
 
@@ -22,6 +27,7 @@ public:
 	};
 private:
 	void Draw();
+
 	int x1, y1, x2, y2;
 	bool init;//ç≈èâÇÕfalse,InitåƒèoÇµå„true
 	static int selectingGraph;
@@ -36,20 +42,21 @@ private:
 		int graph;
 		int x, y;
 		CMouse Mouse;
-	}selectableObj[10];
+	}selectableObj[4];
 };
 
 
-class CMakeScaffold {
+class CScaffoldMaker {
 public:
-	CMakeScaffold();
+	CScaffoldMaker();
 	void Init();
 	void UpDate();
+	
 private:
 	CDrawField drawField;
 	CSelectField selectField;
 	
 	bool init;
-	int scaffoldGraph[5];
+	int scaffoldGraph[ScaffoldTypeNum];
 };
 

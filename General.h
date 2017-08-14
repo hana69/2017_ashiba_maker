@@ -3,6 +3,9 @@
 #include<string>
 /////ƒQ[ƒ€—p’è”/////
 enum ScaffoldType{
+	JUMP,
+	SPEED_UP,
+	SPEED_DOWN,
 	NORMAL,
 	ScaffoldTypeNum
 };

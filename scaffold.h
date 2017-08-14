@@ -2,26 +2,29 @@
 #include"General.h"
 #include"mouse.h"
 
+class CScaffold {
+public:
+	CScaffold(int _graph);
+	void Draw();
+	virtual void HitEffect()=0;
+private:
+	int x, y;
+	int graph;
+	const int cost;
+};
 
+class CNormal :public CScaffold {
+public:
+	CNormal();
+	void HitEffect();
+};
 
-//class CScaffold{
-//public:
-//	CScaffold( int _x1,int _y1,int _x2,int _y2);
-//	void Main();
-//	
-//private:
-//	void SelectField();
-//	
-//	void LoadScaffoldGraph();	
-//	
-//	void SetDrawFieldRange(int _x1,int _y1,int _x2,int _y2);
-//
-//	std::string graphName[ScaffoldTypeNum];
-//	int scaffoldGraph[ScaffoldTypeNum];
-//	
-//	CDrawField DrawField;
-//};
-//
+class CSpeedUp :public CScaffold {
+	void HitEffect();
+};
 
+class CSpeedDown :public CScaffold {
+	void HitEffect();
+};
 
 

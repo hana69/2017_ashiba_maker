@@ -18,6 +18,7 @@ public:
 	void Update();
 	bool Changed();
 private:
+	CMouse Mouse;
 };
 
 class CMain_S :public CScene {

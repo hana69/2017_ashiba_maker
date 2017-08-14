@@ -17,7 +17,7 @@ void CTitle_S::Update() {
 }
 
 bool CTitle_S::Changed(){
-	if (Key.Pushed(KEYNAME.ENTER)) {
+	if (Mouse.LeftReleased()) {
 		return true;
 	}
 	return false;
