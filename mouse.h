@@ -18,6 +18,9 @@ public:
 
 	void SetTemp();	//ŒÄ‚Ño‚³‚ê‚½uŠÔ‚ÌÀ•W‚ğtemp‚É•Û‘¶
 
+	int X() { return x; };
+	int Y() { return y; };
+
 	int TempX(){return tempX;};
 	int TempY(){return tempY;};
 

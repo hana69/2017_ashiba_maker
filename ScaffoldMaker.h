@@ -1,62 +1,87 @@
 #pragma once
-#include"mouse.h"
+#include"Scaffold.h"
 
-class CDrawField {
-public:
-	CDrawField(int _x1, int _y1, int _x2, int _y2);
-	void Update(int _selectingGraph);
-	bool DrawFinished() {
-		return drawFinished;
+///////マウスドラッグ時の足場描画に使用///////////
+static int PlusMinus(int _x) {
+	if (_x < 0) {
+		return -1;
 	}
-private:
-	void Draw(int _selectingGraph);
-
-	int x1, x2, y1, y2;
-	bool writing;
-	bool drawFinished;
-	CMouse Mouse;
+	else if (_x == 0) {
+		return 0;
+	}
+	else {
+		return 1;
+	}
 };
-
-class CSelectField {
+///////////////////////////////////////////////
+class CScaffoldSelector {
 public:
-	CSelectField(int _x1, int _y1, int _x2, int _y2);
-	void Init(int[]);
+	CScaffoldSelector(int _x1, int _y1, int _x2, int _y2);
+	void Init();
 	void Update();
-	int SelectingGraph() {
-		return selectingGraph;
-	};
+	ScaffoldType SelectingType() { return selectingType; };
+
 private:
 	void Draw();
 
 	int x1, y1, x2, y2;
 	bool init;//最初はfalse,Init呼出し後true
-	static int selectingGraph;
+	ScaffoldType selectingType;
+
 	class CSelectableObj {
 	public:
 		CSelectableObj();
-		void Load(int);
+		void SetType(ScaffoldType _type) { type = _type; };//配列のコンストラクタが呼び出せないので応急処置
 		void Draw();
-		void SetRange(int, int);
-		void Select();
+		void SetPosition(int, int);
+		void Select(ScaffoldType*);
+		ScaffoldType Type() { return type; };
 	private:
-		int graph;
+		ScaffoldType type;
 		int x, y;
 		CMouse Mouse;
 	}selectableObj[4];
 };
 
-
-class CScaffoldMaker {
+class CScaffoldDrawer {
 public:
-	CScaffoldMaker();
+	CScaffoldDrawer();
 	void Init();
-	void UpDate();
-	
+	void Update();
+
+	bool DrawFinished() { return drawFinished; };
+	NecessaryInfoToMake DrawnScaffold() { return writingObj; };
 private:
-	CDrawField drawField;
-	CSelectField selectField;
+	void Draw();
+		void SetInfo();
+	NecessaryInfoToMake writingObj;
+
+	CScaffoldSelector selector;
+	
+	const int x1, x2, y1, y2;
 	
 	bool init;
-	int scaffoldGraph[ScaffoldTypeNum];
+	bool writing;
+	bool drawFinished;
+	
+	CMouse Mouse;
 };
+
+
+
+//class CScaffoldMaker {
+//public:
+//	CScaffoldMaker();
+//	void Init();
+//	void UpDate();
+//	NecessaryInfoToMake MakedScaffold() { return drawField.DrawnScaffold(); };
+//	bool Maked() { return maked; };
+//private:
+//	void Make(NecessaryInfoToMake);
+//	CDrawField drawField;
+//	
+//	
+//	bool init;
+//	bool maked;
+//};
 

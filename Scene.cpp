@@ -30,7 +30,13 @@ CMain_S::CMain_S(const CScene* _n)
 
 void CMain_S::Update() {
 	DrawString(0, 0, "main", RED);
-	scaffoldMaker.UpDate();
+
+	field.Update();
+	scaffoldDrawer.Update();
+	
+	if (scaffoldDrawer.DrawFinished()) {
+		field.Make(scaffoldDrawer.DrawnScaffold());
+	}
 }
 
 bool CMain_S::Changed() {

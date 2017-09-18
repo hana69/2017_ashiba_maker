@@ -10,6 +10,8 @@ enum ScaffoldType{
 	ScaffoldTypeNum
 };
 
+static int scaffoldGraph[ScaffoldTypeNum] = {};//‰æ‘œ‚È‚Ì‚ÅCMain‚ÌAwake‚Å“Ç‚İ‚İ
+
 //////////////////•@ƒ‰ƒCƒuƒ‰ƒŠver0
 
 //#define IDI_ICON1 101

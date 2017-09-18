@@ -1,48 +1,32 @@
 #include"ScaffoldMaker.h"
-CScaffoldMaker::CScaffoldMaker()
-	:drawField(20, WINDOW_HEIGHT - 280, WINDOW_WIDTH - (20 * 2 + 50), WINDOW_HEIGHT - 20),
-	selectField(WINDOW_WIDTH - (20 * 2 + 50), WINDOW_HEIGHT - (50 * 4 + 20 * 5), WINDOW_WIDTH, WINDOW_HEIGHT),
-	init(false)
+#include<math.h>
+CScaffoldDrawer::CScaffoldDrawer()
+	:selector(WINDOW_WIDTH - (20 * 2 + 50), WINDOW_HEIGHT - (50 * 4 + 20 * 5), WINDOW_WIDTH, WINDOW_HEIGHT),
+	x1(20), y1(WINDOW_HEIGHT - 280), x2(WINDOW_WIDTH - (20 * 2 + 50)), y2(WINDOW_HEIGHT - 20),
+	init(false), writing(false), drawFinished(false),
+	Mouse(x1, y1, x2, y2)
 {}
 
-void CScaffoldMaker::Init() {
-	for (int i = 0; i < ScaffoldTypeNum; i++) {
-		std::string s = "noseResource/scaffold" + std::to_string(i + 1) + ".png";
-		scaffoldGraph[i] = LoadGraph(s.c_str());
-	}
-	selectField.Init(scaffoldGraph);
+void CScaffoldDrawer::Init(){
+	LoadDivGraph("noseResource/Scaffold.png", (int)ScaffoldTypeNum, 3, 3, 50, 50, scaffoldGraph);
+	selector.Init();
 }
 
-void CScaffoldMaker::UpDate() {
+void CScaffoldDrawer::Update() {
 	if (!init) {
 		Init();
 		init = true;
 	}
-	drawField.Update(selectField.SelectingGraph());
-	selectField.Update();
-	if (drawField.DrawFinished()) {
-
-	}
+	Draw();
+	selector.Update();
 }
 
-///////////////////////////CDrawField////////////////////////////////////
 
-/////////////コンストラクタ///////////////////
-
-CDrawField::CDrawField(int _x1, int _y1, int _x2, int _y2)
-	:x1(_x1),x2(_x2),y1(_y1),y2(_y2),
-	writing(false),
-	drawFinished(false),
-	 Mouse(_x1,_y1,_x2,_y2)
-{}
 /////////////public関数//////////////////////
-void CDrawField::Update(int _selectingGraph) {
-	Draw(_selectingGraph);
-}
 
 ////////////private関数//////////////////////
 
-void CDrawField::Draw(int _selectingGraph) {
+void CScaffoldDrawer::Draw() {
 	DrawBox(x1, y1, x2, y2, WHITE, false);
 
 	if (Mouse.Insided()) {
@@ -55,114 +39,91 @@ void CDrawField::Draw(int _selectingGraph) {
 	if (Mouse.LeftReleased() && writing) {
 		writing = false;
 		drawFinished = true;
+		SetInfo();
 	}
-
+	
 	if (writing) {
-		if (Mouse.ChangeX() > 0 ) {
-			if (Mouse.ChangeY() > 0) {
-				for (int i = Mouse.TempX(); i < Mouse.TempX() + Mouse.ChangeX() - 50; i += 50) {
-					for (int j = Mouse.TempY(); j < Mouse.TempY() + Mouse.ChangeY() - 50; j += 50) {
-						if ( x2 > i+50 && y2 > j+50) {
-							DrawGraph(i, j, _selectingGraph, true);
-						}
-					}
-				}
-			}
-			else if (Mouse.ChangeY() < 0) {
-				for (int i = Mouse.TempX(); i < Mouse.TempX() + Mouse.ChangeX() - 50; i += 50) {
-					for (int j = Mouse.TempY(); j > Mouse.TempY() + Mouse.ChangeY() + 50; j -= 50) {
-						if (x2 > i + 50 && y1 < j - 50 ) {
-							DrawGraph(i, j - 50, _selectingGraph, true);
-						}
-					}
+		for (int i = Mouse.TempX() + PlusMinus(Mouse.ChangeX()) * 25;
+			std::abs(i - (Mouse.TempX() + PlusMinus(Mouse.ChangeX()) * 25)) <= std::abs(Mouse.ChangeX());
+			i += PlusMinus(Mouse.ChangeX()) * 50) {
+			for (int j = Mouse.TempY() + PlusMinus(Mouse.ChangeY()) * 25;
+				std::abs(j - (Mouse.TempY() + PlusMinus(Mouse.ChangeY()) * 25)) <= std::abs(Mouse.ChangeY());
+				j += PlusMinus(Mouse.ChangeY()) * 50 ) {
+				if (x1 < i - 25  &&  i + 25 < x2 && y1 < j - 25 && j + 25 < y2 ) {
+					DrawGraph(i - 25, j - 25, scaffoldGraph[selector.SelectingType()], true);
 				}
 			}
 		}
-		else if (Mouse.ChangeX() < 0) {
-			if (Mouse.ChangeY() > 0) {
-				for (int i = Mouse.TempX(); i > Mouse.TempX() + Mouse.ChangeX() + 50; i -= 50) {
-					for (int j = Mouse.TempY(); j < Mouse.TempY() + Mouse.ChangeY() - 50; j += 50) {
-						if ( x1 < i - 50 && y2 > j + 50) {
-							DrawGraph(i - 50, j, _selectingGraph, true);
-						}
-					}
-				}
-			}
-			else if (Mouse.ChangeY() < 0) {
-				for (int i = Mouse.TempX(); i > Mouse.TempX() + Mouse.ChangeX() + 50; i -= 50) {
-					for (int j = Mouse.TempY(); j > Mouse.TempY() + Mouse.ChangeY() + 50; j -= 50) {
-						if ( x1 < i - 50 && y1 < j - 50 ) {
-							DrawGraph(i - 50, j - 50, _selectingGraph, true);
-						}
-					}
-				}
-			}
-		}
-
 	}
-}
 
+}
+	
+	void CScaffoldDrawer::SetInfo() {
+		writingObj.width = std::abs(Mouse.ChangeX() / 50 );//切り捨て
+		writingObj.height = std::abs(Mouse.ChangeY() / 50);//切り捨て
+		writingObj.type = selector.SelectingType();
+		if (Mouse.ChangeX() < 0) {
+			writingObj.x = Mouse.TempX()+ Mouse.ChangeX() / 50 * 50;
+		}
+		else {
+			writingObj.x = Mouse.TempX();
+		}
+		if (Mouse.ChangeY() < 0) {
+			writingObj.y = Mouse.TempY() + Mouse.ChangeY() / 50 * 50;
+		}
+		else {
+			writingObj.y = Mouse.TempY();
+		}
+	}
 ///////////////////////////CSelectField////////////////////////////////////
 
-int CSelectField::selectingGraph = 0;
-CSelectField::CSelectField(int _x1, int _y1, int _x2, int _y2)
+CScaffoldSelector::CScaffoldSelector(int _x1, int _y1, int _x2, int _y2)
 	:x1(_x1), x2(_x2), y1(_y1), y2(_y2),
-	init(false)
+	init(false),selectingType(NORMAL)
 {
 	for (int i = 0; i <ScaffoldTypeNum;i++) {
-		selectableObj[i].SetRange(x1+20, y1+20+i*70);
+		selectableObj[i].SetPosition(x1+20, y1+20+i*70);
 	}
 }
 
-void CSelectField::Init(int _graph[]) {
-	for (int i = 0; i < ScaffoldTypeNum; i++) {
-		selectableObj[i].Load(_graph[i]);
+void CScaffoldSelector::Init() {
+	for (int i = 0; i < ScaffoldTypeNum;i++) {
+		selectableObj[i].SetType((ScaffoldType)i);
 	}
-	selectingGraph = _graph[NORMAL];
+	selectingType = NORMAL;
 }
-void CSelectField::Update() {
+void CScaffoldSelector::Update() {
 	Draw();
-	for (auto i:selectableObj) {
-		i.Select();
+	for (auto i :selectableObj) {
+		i.Select(&selectingType);
 	}
 }
 
-void CSelectField::Draw() {
+void CScaffoldSelector::Draw() {
 	for (int i = 0; i < ScaffoldTypeNum; i++) {
 		selectableObj[i].Draw();
 	}
 }
 
-CSelectField::CSelectableObj::CSelectableObj()
-	:graph(0),
-	x(0),y(0)
+CScaffoldSelector::CSelectableObj::CSelectableObj()
+	:x(0), y(0), type(NORMAL)
 {}
 
-void CSelectField::CSelectableObj::Load(int _graph) {
-	if (graph==0) {
-		graph = _graph;
-	}
-}
-
-void CSelectField::CSelectableObj::Draw() {
-	DrawGraph(x, y, graph, true);
+void CScaffoldSelector::CSelectableObj::Draw() {
+	DrawGraph(x, y, scaffoldGraph[type], true);
 	if (Mouse.Insided()) {
 		DrawBox(x, y, x + 50, y + 50, YELLOW, false);
 	}
 }
 
-void CSelectField::CSelectableObj::SetRange(int _x,int _y) {
+void CScaffoldSelector::CSelectableObj::SetPosition(int _x,int _y) {
 	x = _x;
 	y = _y;
 	Mouse.SetRange(_x, _y, _x + 50, _y + 50);
 }
 
-void CSelectField::CSelectableObj::Select() {
-
-	if ( Mouse.Insided() ) {
-		if ( Mouse.LeftPushed() ) {
-			selectingGraph = graph;
-		}
+void CScaffoldSelector::CSelectableObj::Select(ScaffoldType* _selectingType ) {
+	if (Mouse.Insided() && Mouse.LeftPushed()) {
+		*_selectingType = type;
 	}
-
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include"key.h"
-#include"MakeScaffold.h"
+#include"ScaffoldMaker.h"
+#include"ActionField.h"
 
 class CScene {
 public:
@@ -27,7 +28,8 @@ public:
 	void Update();
 	bool Changed();
 private:
-	CMakeScaffold scaffoldMaker;
+	CActionField field;
+	CScaffoldDrawer scaffoldDrawer;
 };
 
 
