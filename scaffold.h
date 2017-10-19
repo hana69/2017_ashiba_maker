@@ -1,60 +1,26 @@
 #pragma once
 #include"General.h"
-#include"mouse.h"
+
 struct NecessaryInfoToMake {
-	int width;
-	int height;
-	int x, y;
+	int x1, y1,x2,y2;
 	ScaffoldType type;
 };
 
 class CScaffold {
+	static const int cost[ScaffoldTypeNum];
 public:
-	CScaffold(int _cost);
-	virtual void Draw() = 0;
-	virtual void HitEffect() {};
-	virtual ScaffoldType Type()=0;
-	int Cost() { return cost; };
-protected:
-	int x, y;
-	static int graph;
-	const int cost;
-};
-
-class CNormal :public CScaffold {
-public:
-	CNormal();
-	void Draw();
-	ScaffoldType Type() {
-		return NORMAL;
-	};
-};
-
-class CSpeedUp :public CScaffold {
-public:
-	CSpeedUp();
-	void Draw();
-	ScaffoldType Type() {
-		return SPEED_UP;
-	};
-};
-
-class CSpeedDown :public CScaffold {
-public:
-	CSpeedDown();
-	void Draw();
-	ScaffoldType Type() {
-		return SPEED_DOWN;
-	};
-};
-
-class CJump :public CScaffold {
-public:
-	CJump();
-	void Draw();
+	CScaffold(ScaffoldType,int _xPlace,int _yPlace);
+	void Draw(int _scroll);
+	void Move(int _limit);
 	void HitEffect();
-	ScaffoldType Type() {
-		return JUMP;
-	}
+
+	ScaffoldType Type() { return type; };
+	int Cost() { return cost[type]; };
+	float X() { return x; };
+	float Y() { return y; };
+protected:
+	ScaffoldType type;
+	float x, y;
 };
+
 

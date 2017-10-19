@@ -29,6 +29,8 @@ public:
 		
 	bool LeftPushing();
 	bool Insided();
+
+	int Wheel(int rate=1);//奥がマイナス手前がプラス
 private:
 
 	int x,y;

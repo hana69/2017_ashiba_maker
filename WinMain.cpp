@@ -1,6 +1,9 @@
 #include "main.h"
+#include"key.h"
 
 #define FPS 60
+
+
 
 int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
 

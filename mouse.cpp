@@ -105,3 +105,15 @@ bool CMouse::Insided(){
 	}
 	return false;
 }
+
+int CMouse::Wheel(int rate) {
+	static int f = 0;
+	f++;
+	if (f>rate) {
+		f = 0;
+		return -GetMouseWheelRotVol();
+		
+	}
+	return 0;
+	
+}

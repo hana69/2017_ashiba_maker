@@ -15,8 +15,7 @@ private:
 
 	CScene* scene;
 
-	const CTitle_S Title_S;
-	const CMain_S Main_S;
-
+	CTitle_S TITLE_S;
+	CMain_S MAIN_S;
 	//CScaffold Scaffold;
 };

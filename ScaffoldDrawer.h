@@ -1,5 +1,6 @@
 #pragma once
 #include"Scaffold.h"
+#include"mouse.h"
 
 ///////マウスドラッグ時の足場描画に使用///////////
 static int PlusMinus(int _x) {
@@ -17,7 +18,6 @@ static int PlusMinus(int _x) {
 class CScaffoldSelector {
 public:
 	CScaffoldSelector(int _x1, int _y1, int _x2, int _y2);
-	void Init();
 	void Update();
 	ScaffoldType SelectingType() { return selectingType; };
 
@@ -46,10 +46,9 @@ private:
 class CScaffoldDrawer {
 public:
 	CScaffoldDrawer();
-	void Init();
 	void Update();
 
-	bool DrawFinished() { return drawFinished; };
+	bool DrawFinished() ;
 	NecessaryInfoToMake DrawnScaffold() { return writingObj; };
 private:
 	void Draw();
@@ -60,28 +59,8 @@ private:
 	
 	const int x1, x2, y1, y2;
 	
-	bool init;
 	bool writing;
 	bool drawFinished;
 	
 	CMouse Mouse;
 };
-
-
-
-//class CScaffoldMaker {
-//public:
-//	CScaffoldMaker();
-//	void Init();
-//	void UpDate();
-//	NecessaryInfoToMake MakedScaffold() { return drawField.DrawnScaffold(); };
-//	bool Maked() { return maked; };
-//private:
-//	void Make(NecessaryInfoToMake);
-//	CDrawField drawField;
-//	
-//	
-//	bool init;
-//	bool maked;
-//};
-

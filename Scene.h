@@ -1,6 +1,6 @@
 #pragma once
-#include"key.h"
-#include"ScaffoldMaker.h"
+
+#include"ScaffoldDrawer.h"
 #include"ActionField.h"
 
 class CScene {
@@ -30,6 +30,9 @@ public:
 private:
 	CActionField field;
 	CScaffoldDrawer scaffoldDrawer;
+
+	int scroll;
+	void Scroll();
 };
 
 

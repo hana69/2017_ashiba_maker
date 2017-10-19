@@ -1,18 +1,10 @@
 #pragma once
 
 #include<string>
-/////ƒQ[ƒ€—p’è”/////
-enum ScaffoldType{
-	JUMP,
-	SPEED_UP,
-	SPEED_DOWN,
-	NORMAL,
-	ScaffoldTypeNum
-};
+#include"DxLib.h"
 
-static int scaffoldGraph[ScaffoldTypeNum] = {};//‰æ‘œ‚È‚Ì‚ÅCMain‚ÌAwake‚Å“Ç‚İ‚İ
 
-//////////////////•@ƒ‰ƒCƒuƒ‰ƒŠver0
+//////////////////ƒ‰ƒCƒuƒ‰ƒŠver0
 
 //#define IDI_ICON1 101
 
@@ -32,15 +24,43 @@ static int scaffoldGraph[ScaffoldTypeNum] = {};//‰æ‘œ‚È‚Ì‚ÅCMain‚ÌAwake‚Å“Ç‚İ‚
 
 /////ƒGƒ‰[’Eo—pŠÖ”////////
 
-static bool loopEscapeFlag = false;
-static std::string errorMes = "";
 
-static void EscapeProgram() {
-	loopEscapeFlag = true;
+static bool EscapeProgram(bool escapeScene = false) {
+	static bool loopEscapeFlag = false;
+	if (!escapeScene) {
+		loopEscapeFlag = true;
+	}
+	return loopEscapeFlag;
 };
-static void EscapeProgram(const char* _mes) {
-	loopEscapeFlag = true;
+static bool EscapeProgram(const char* _mes,bool escapeScene=false) {
+	static bool loopEscapeFlag = false;
+	static std::string errorMes = "";
+	if (!escapeScene) {
+		loopEscapeFlag = true;
+	}
 	errorMes = _mes;
+	return loopEscapeFlag;
 };
 
 ////////////////////////////////////////////////////////////////
+
+/////ƒQ[ƒ€—p’è”/////
+enum ScaffoldType {
+	JUMP,
+	SPEED_DOWN,
+	SPEED_UP,
+	NORMAL,
+	ScaffoldTypeNum
+};
+
+static int scaffoldGraph(ScaffoldType _type) {
+	static int graph[ScaffoldTypeNum] = {};
+	if (graph[_type] == 0) {
+		LoadDivGraph("noseResource/Scaffold.png", (int)ScaffoldTypeNum, 3, 3, 50, 50, graph);
+	}
+	return graph[_type];
+};
+
+const int DRAW_AREA_TOP = WINDOW_HEIGHT - 50 * 3 - 20 - 1,
+		  DRAW_AREA_LEFT = 20,
+		  DRAW_AREA_RIGHT = WINDOW_WIDTH - (20 * 2 + 50);
