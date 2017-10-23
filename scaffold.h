@@ -9,6 +9,7 @@ struct NecessaryInfoToMake {
 class CScaffold {
 	static const int cost[ScaffoldTypeNum];
 public:
+	CScaffold();
 	CScaffold(ScaffoldType,int _xPlace,int _yPlace);
 	void Draw(int _scroll);
 	void Move(int _limit);

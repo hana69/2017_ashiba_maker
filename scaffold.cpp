@@ -3,6 +3,10 @@
 //////////////////CScaffold//////////////////////////
 const int CScaffold::cost[ScaffoldTypeNum] = {10,20,10,10};
 ////////コンストラクタ//////////
+CScaffold::CScaffold() 
+	:type(NORMAL),x(0),y(0)
+{}
+
 CScaffold::CScaffold(ScaffoldType _type,int _xPlace,int _yPlace)
 	:type(_type),x(_xPlace),y(_yPlace)
 {}

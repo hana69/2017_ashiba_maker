@@ -10,7 +10,7 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
 	SetWindowText("Title");
 	//SetWindowIconID(101);
 	SetGraphMode(WINDOW_WIDTH , WINDOW_HEIGHT , 16 );
-	ChangeWindowMode(TRUE), DxLib_Init(), SetDrawScreen( DX_SCREEN_BACK );
+	ChangeWindowMode(true), DxLib_Init(), SetDrawScreen( DX_SCREEN_BACK );
 
 	ScreenFlip();
 

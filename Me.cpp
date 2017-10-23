@@ -5,11 +5,12 @@ CMe::CMe()
 	:x(0),y(0),
 	vx(0),vy(0),
 	gameOver(false),
+	hitUnderSide(false),
 	graph(LoadGraph("noseResource/me.png"))
 {}
 void CMe::SetV() {
 	vx = 1;
-	vy += 0.3;
+	vy += 0.3f;
 }
 
 void CMe::Move()
@@ -30,8 +31,16 @@ void CMe::ResetV() {
 	//vy = 0;
 }
 
-void CMe::Draw(int _scroll)
-{
+void CMe::Restart() {
+	gameOver = false;
+	x = 0;
+	y = 0;
+	vx = 0;
+	vy = 0;
+	hitUnderSide = false;
+}
+
+void CMe::Draw(int _scroll){
 	//DrawGraph(x,y,graph,true);
 	//DrawBox(x*50-_scroll,y*50,x*50+50-_scroll,y*50+50,RED,true);
 	DrawBox(x - _scroll,y,x+50-_scroll,y+50,RED,true);
@@ -46,10 +55,17 @@ bool CMe::CollidedWith(CScaffold* _sc) {
 		}
 	}
 
-	if (_sc->X() * 50 <= x + 50 && _sc->X() * 50 + 50 >= x) {
+	if (_sc->X() * 50 < x + 50 && _sc->X() * 50 + 50 > x) {
 		if (_sc->Y() * 50 < y + 50 + vy && _sc->Y() * 50 + 50 > y + vy) {
 			if (y > _sc->Y()*50) {
+				hitUnderSide = true;//足場の下側（自機の上側）に当たったのを記録
+				y = _sc->Y() * 50 + 50;
+				vy = 0;
+				return true;
+			}
+			else if (hitUnderSide) {//すでに足場の上側に当たっていて、下側に当たった
 				gameOver = true;
+				vy = 0;
 				return true;
 			}
 			y = _sc->Y() * 50 - 50;

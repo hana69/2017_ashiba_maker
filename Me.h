@@ -1,5 +1,6 @@
 #pragma once
 #include"scaffold.h"
+#include"Coin.h"
 
 class CMe {
 public:
@@ -7,6 +8,10 @@ public:
 	void SetV();
 	void Move();
 	void ResetV();
+
+	void ResetHit() { hitUnderSide = false; };
+
+	void Restart();
 
 	void Draw(int _scroll);
 	bool CollidedWith(CScaffold* _sc);
@@ -17,6 +22,9 @@ public:
 	int Y() { return y; };
 private:
 	void HitEffect(ScaffoldType);
+
+	bool hitUnderSide;
+
 	bool gameOver;
 	int graph;
 	float x,y;

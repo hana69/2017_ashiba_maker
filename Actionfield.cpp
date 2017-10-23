@@ -1,24 +1,43 @@
 #include"ActionField.h"
 #include<algorithm>
+#include"mouse.h"
 
 CActionField::CActionField() 
-	:width(200),height( (WINDOW_HEIGHT-280) / 50 )
+	:width(200),height( (WINDOW_HEIGHT-280) / 50 ),
+	 returnTitleFlag(false),coin(200)
 {
-	int mapdata=LoadSoftImage("noseResource/mapdata.png");
-	
-	for (int i = 0; i < 500;i++) {
+	//配列の初期化
+	for (int i = 0; i < 500; i++) {
 		limit[i] = 0;
+		for (int j = 0; j < 15; j++) {
+			firstPut[i][j] = false;
+		}
 	}
+	//
+
+	//////マップ読み込み///////////////
+	int limitdata = LoadSoftImage("noseResource/limitdata.png");
+	int mapdata = LoadSoftImage("noseResource/mapdata.png");
+
 	int r, g, b, a;
 	for (int i = 0; i < width;i++) {
 		for (int j = 0; j < height;j++) {
-			GetPixelSoftImage(mapdata,i,j,&r,&g,&b,&a);
+			GetPixelSoftImage( limitdata,i,j,&r,&g,&b,&a);
 			if (r == 255 && g == 0 && b == 0) {
 				limit[i] = j;
 			}
+			GetPixelSoftImage(mapdata, i, j, &r , &g , &b, &a);
+			if (r == 128 && g == 128 && b == 128) {
+				sc[i].push_back(new CScaffold(NORMAL,i,j) );
+				firstSc[i][j] = *(sc[i].back());
+				firstPut[i][j] = true;
+			}
+			else if (r == 255 && g == 255 && b == 0) {
+				coin.Add(i, j);
+			}
 		}
 	}
-
+	////////////////////////////////////////
 }
 CActionField::~CActionField() {
 	for (int i = 0; i < width; i++) {
@@ -34,12 +53,12 @@ void CActionField::Update(int _scroll){
 		Collision();
 		Move();
 		me.ResetV();
+		me.ResetHit();
+		Draw(_scroll);
 	}
 	else {
-		DrawBox(WINDOW_WIDTH/2-100,WINDOW_HEIGHT/2-70, WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT / 2 + 70,BLACK,true );
-		DrawBox(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 70, WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT / 2 + 70, WHITE, false);
+		Draw(_scroll);
 	}
-	Draw(_scroll);
 }
 
 void CActionField::Make(NecessaryInfoToMake _info,int _scroll) {
@@ -57,12 +76,28 @@ void CActionField::Make(NecessaryInfoToMake _info,int _scroll) {
 	}
 }
 
+void CActionField::Restart() {
+	me.Restart();
+	for (int i = 0; i < width; i++) {
+		for (auto j : sc[i]) {
+			delete j;
+		}
+		sc[i].clear();
+		for (int j = 0; j < 15;j++) {
+			if (firstPut[i][j]) {
+				sc[i].push_back(new CScaffold(firstSc[i][j].Type(), i, j));
+			}
+		}
+	}
+	returnTitleFlag = false;
+}
+
 void CActionField::Collision() {
 	if (me.X() % 50 == 0) {
-		for (int i = 0; i < 2; i++) {
-			if (!sc[me.X() / 50+i].empty()) {
-				for (auto j : sc[me.X() / 50 + i]) {
-					if (me.CollidedWith(j)) {
+		for (int j = 0; j < 15;j++) {
+			for (int i = 0; i < 2; i++) {
+				if ( j < sc[me.X() / 50 + i].size()) {
+					if (me.CollidedWith(sc[me.X() / 50 + i][j])) {
 						//sc[me.X() / 50][0]->HitEffect();
 						if (me.GameOver()) {
 							break;
@@ -70,19 +105,27 @@ void CActionField::Collision() {
 					}
 				}
 			}
-			if (me.GameOver()) {
-				break;
+		}	
+	}
+	else {
+		for (int j = 0; j < 15; j++) {
+			for (int i = 0; i < 3; i++) {
+				if (j < sc[me.X() / 50 + i].size()) {
+					if (me.CollidedWith(sc[me.X() / 50 + i][j])) {
+						//sc[me.X() / 50 + i][0]->HitEffect();
+						if (me.GameOver()) {
+							break;
+						}
+					}
+				}
 			}
 		}
 	}
-	else {
-		for (int i = 0; i < 3; i++) {
-			if (!sc[me.X() / 50+i].empty()) {
-				for (auto j : sc[me.X() / 50+i]) {
-					if (me.CollidedWith(j)) {
-						//sc[me.X() / 50 + i][0]->HitEffect();
-					}
-				}
+
+	for (int i = (int)(me.X() / 50); i < me.X()/50 + 2; i++) {
+		for (int j = (int)(me.Y() / 50); j < me.Y()/50 + 2; j++) {
+			if (coin.Valid(i, j)) {
+				coin.Delete(i, j);
 			}
 		}
 	}
@@ -94,6 +137,7 @@ void CActionField::Draw(int _scroll) {
 			j->Draw(_scroll);
 		}
 	}
+	coin.Draw(_scroll);
 }
 void CActionField::Move() {
 	for (int i = 0; i < width; i++) {

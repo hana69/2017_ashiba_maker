@@ -1,5 +1,7 @@
 #include"Scene.h"
 #include"key.h"
+#include"mouse.h"
+#include"DrawGameOver.h"
 
 CScene::CScene(const CScene* _next) 
 	:next(_next)
@@ -47,6 +49,19 @@ void CMain_S::Update() {
 		field.Make(scaffoldDrawer.DrawnScaffold(),scroll);
 	}
 	field.Update(scroll);
+
+	if (field.GameOvered()) {
+		static CGameOverMenu gameOverMenu;
+		switch (gameOverMenu.Update()) {
+		case RETRY:
+			scroll = 0;
+			field.Restart();
+			break;
+		case RETURN_TO_TITLE:
+			
+			break;
+		}
+	}
 	
 }
 
