@@ -1,7 +1,6 @@
 #include"scaffold.h"
 
 //////////////////CScaffold//////////////////////////
-const int CScaffold::cost[ScaffoldTypeNum] = {10,20,10,10};
 ////////コンストラクタ//////////
 CScaffold::CScaffold() 
 	:type(NORMAL),x(0),y(0)
@@ -12,8 +11,9 @@ CScaffold::CScaffold(ScaffoldType _type,int _xPlace,int _yPlace)
 {}
 ///////public関数/////////////
 void CScaffold::Draw(int _scroll) {
-	DrawGraph(x*50 - _scroll, y*50, scaffoldGraph(type), true);
-	//DrawFormatString(x*50 - _scroll,y*50,PURPLE,"%f",x);
+	if (0 < x*50+50-_scroll && x*50-_scroll < WINDOW_WIDTH) {
+		DrawGraph(x * 50 - _scroll, y * 50, scaffoldGraph(type), true);
+	}
 }
 
 void CScaffold::Move(int _limit) {

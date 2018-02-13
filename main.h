@@ -13,9 +13,12 @@ private:
 	int backPic;
 	int titleBGM;
 
-	CScene* scene;
+	enum {
+		TITLE_S,
+		MAIN_S
+	}scene;
 
-	CTitle_S TITLE_S;
-	CMain_S MAIN_S;
+	CTitle_S title;
+	CMain_S main;
 	//CScaffold Scaffold;
 };

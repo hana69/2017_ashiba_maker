@@ -2,9 +2,13 @@
 #include<algorithm>
 #include"mouse.h"
 
-CActionField::CActionField() 
+int CActionField::limitdata[10] = {};
+int CActionField::mapdata[10] = {};
+CActionField::CActionField(int _stageNum) 
 	:width(200),height( (WINDOW_HEIGHT-280) / 50 ),
-	 returnTitleFlag(false),coin(200)
+	 returnTitleFlag(false),menuOpening(false),
+	coinGotFlag(false),
+	coin(width)
 {
 	//配列の初期化
 	for (int i = 0; i < 500; i++) {
@@ -16,27 +20,59 @@ CActionField::CActionField()
 	//
 
 	//////マップ読み込み///////////////
-	int limitdata = LoadSoftImage("noseResource/limitdata.png");
-	int mapdata = LoadSoftImage("noseResource/mapdata.png");
+	if (limitdata[_stageNum] == 0) {
+		std::string s = "noseResource/limitdata";
+		s += std::to_string(_stageNum);
+		s += ".png";
+		limitdata[_stageNum] = LoadSoftImage(s.c_str());
+	}
+	if (mapdata[_stageNum] == 0) {
+		std::string s = "noseResource/mapdata";
+		s += std::to_string(_stageNum);
+		s += ".png";
+		mapdata[_stageNum] = LoadSoftImage(s.c_str());
+	}
+	//////////////////////////////////////
 
 	int r, g, b, a;
 	for (int i = 0; i < width;i++) {
 		for (int j = 0; j < height;j++) {
-			GetPixelSoftImage( limitdata,i,j,&r,&g,&b,&a);
+			GetPixelSoftImage( limitdata[_stageNum],i,j,&r,&g,&b,&a);
 			if (r == 255 && g == 0 && b == 0) {
 				limit[i] = j;
 			}
-			GetPixelSoftImage(mapdata, i, j, &r , &g , &b, &a);
+			GetPixelSoftImage(mapdata[_stageNum], i, j, &r , &g , &b, &a);
 			if (r == 128 && g == 128 && b == 128) {
 				sc[i].push_back(new CScaffold(NORMAL,i,j) );
 				firstSc[i][j] = *(sc[i].back());
 				firstPut[i][j] = true;
 			}
-			else if (r == 255 && g == 255 && b == 0) {
+			else if (r == 255 && g == 128 && b == 0) {
 				coin.Add(i, j);
+			}
+			else if (r == 255 && g == 0 && b == 255) {
+				sc[i].push_back(new CScaffold(GOAL, i, j));
+				firstSc[i][j] = *(sc[i].back());
+				firstPut[i][j] = true;
+			}
+			else if (r == 255 && g == 0 && b == 0) {
+				sc[i].push_back(new CScaffold(JUMP, i, j));
+				firstSc[i][j] = *(sc[i].back());
+				firstPut[i][j] = true;
+			}
+			else if (r == 255 && g == 255 && b == 0) {
+				sc[i].push_back(new CScaffold(SPEED_UP, i, j));
+				firstSc[i][j] = *(sc[i].back());
+				firstPut[i][j] = true;
+			}
+			else if (r == 0 && g == 0 && b == 255) {
+				sc[i].push_back(new CScaffold(SPEED_DOWN, i, j));
+				firstSc[i][j] = *(sc[i].back());
+				firstPut[i][j] = true;
 			}
 		}
 	}
+	
 	////////////////////////////////////////
 }
 CActionField::~CActionField() {
@@ -48,17 +84,50 @@ CActionField::~CActionField() {
 }
 
 void CActionField::Update(int _scroll){
-	if (!me.GameOver()) {
-		me.SetV();
-		Collision();
-		Move();
-		me.ResetV();
-		me.ResetHit();
+	coinGotFlag = false;
+	static CMouse mouse(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25);
+	if ( !me.GameOver() && !me.GameClear() ){
+		if (!menuOpening) {
+			me.SetV();
+			Collision();//ここでcoinGotFlagがtrueになるかも
+			Move();
+			me.ResetV();
+			me.ResetHit();
+		}
 		Draw(_scroll);
+		DrawBox(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25, ORANGE, true);
+		DrawBox(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25, WHITE, false);
+		if (mouse.Insided()) {
+			static int menuGraph = LoadGraph("noseResource/menuBottunPoint.png");
+			DrawGraph(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, menuGraph, true);
+			if (mouse.LeftPushed()) {
+				menuOpening = true;
+			}
+		}
+		else {
+			static int menuGraph = LoadGraph("noseResource/menuBottun.png");
+			DrawGraph(WINDOW_WIDTH - (20 * 2 + 50) + 10, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, menuGraph, true);
+		}
 	}
 	else {
 		Draw(_scroll);
 	}
+}
+
+void CActionField::OnlyDraw(int _scroll) {
+	DrawBox(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25, ORANGE, true);
+	DrawBox(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25, WHITE, false);
+	DrawLimit(_scroll);
+	me.Draw(_scroll);
+	for (int i = 0; i < width; i++) {
+		for (auto j : sc[i]) {
+			j->Draw(_scroll);
+		}
+	}
+	coin.Draw(_scroll);
+	static int menuGraph = LoadGraph("noseResource/menuBottun.png");
+	DrawGraph(WINDOW_WIDTH - (20 * 2 + 50) + 10, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, menuGraph, true);
+
 }
 
 void CActionField::Make(NecessaryInfoToMake _info,int _scroll) {
@@ -89,6 +158,7 @@ void CActionField::Restart() {
 			}
 		}
 	}
+	coin.Reset();
 	returnTitleFlag = false;
 }
 
@@ -126,19 +196,31 @@ void CActionField::Collision() {
 		for (int j = (int)(me.Y() / 50); j < me.Y()/50 + 2; j++) {
 			if (coin.Valid(i, j)) {
 				coin.Delete(i, j);
+				coinGotFlag = true;
 			}
 		}
 	}
 }
 void CActionField::Draw(int _scroll) {
+	DrawLimit(_scroll);
 	me.Draw(_scroll);
-	for (int i = 0; i < width; i++) {
+	for (int i = 0; i < width; i++) {	
 		for (auto j : sc[i]) {
 			j->Draw(_scroll);
 		}
 	}
 	coin.Draw(_scroll);
 }
+	void CActionField::DrawLimit(int _scroll) {
+		static int limitGraph = LoadGraph("noseResource/limit.png");
+		
+		for (int i = 0; i < width; i++) {
+			if (0 < i*50+50-_scroll && i*50-_scroll < WINDOW_WIDTH) {
+				DrawGraph(i*50-_scroll,limit[i]*50-5,limitGraph,true);
+			}
+		}
+		
+	}
 void CActionField::Move() {
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < sc[i].size(); j++) {

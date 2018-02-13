@@ -5,12 +5,14 @@ CMe::CMe()
 	:x(0),y(0),
 	vx(0),vy(0),
 	gameOver(false),
+	gameClear(false),
 	hitUnderSide(false),
-	graph(LoadGraph("noseResource/me.png"))
+	pressedDie(false),
+	graph(LoadGraph("noseResource/trokko_Draw_5.png"))
 {}
 void CMe::SetV() {
-	vx = 1;
-	vy += 0.3f;
+	vx = 1.5f;
+	vy += 0.2f;
 }
 
 void CMe::Move()
@@ -33,17 +35,23 @@ void CMe::ResetV() {
 
 void CMe::Restart() {
 	gameOver = false;
+	gameClear = false;
 	x = 0;
 	y = 0;
 	vx = 0;
 	vy = 0;
 	hitUnderSide = false;
+	pressedDie = false;
 }
 
 void CMe::Draw(int _scroll){
-	//DrawGraph(x,y,graph,true);
-	//DrawBox(x*50-_scroll,y*50,x*50+50-_scroll,y*50+50,RED,true);
-	DrawBox(x - _scroll,y,x+50-_scroll,y+50,RED,true);
+	if(pressedDie){
+		DrawExtendGraph(x - _scroll - 4, diedScUpY-4, x - _scroll - 4 + 58,diedScDownY-8, graph, true);
+	}
+	else {
+		DrawGraph( x - _scroll - 4 , y - 4 , graph , true );
+	}
+	//DrawBox(x - _scroll,y,x+50-_scroll,y+50,RED,true);
 }
 
 bool CMe::CollidedWith(CScaffold* _sc) {
@@ -55,22 +63,29 @@ bool CMe::CollidedWith(CScaffold* _sc) {
 		}
 	}
 
-	if (_sc->X() * 50 < x + 50 && _sc->X() * 50 + 50 > x) {
+	if ( _sc -> X() * 50 < x + 50 && _sc -> X() * 50 + 50 > x ) {
 		if (_sc->Y() * 50 < y + 50 + vy && _sc->Y() * 50 + 50 > y + vy) {
-			if (y > _sc->Y()*50) {
+			if (y > _sc->Y() * 50) {
 				hitUnderSide = true;//足場の下側（自機の上側）に当たったのを記録
+				diedScUpY = _sc->Y() * 50 + 50;
 				y = _sc->Y() * 50 + 50;
 				vy = 0;
-				return true;
 			}
-			else if (hitUnderSide) {//すでに足場の上側に当たっていて、下側に当たった
-				gameOver = true;
-				vy = 0;
-				return true;
+			else {//足場の上側（自機の下側）に当たった
+				if (hitUnderSide) {//すでに足場の下側（自機の上側）に当たっていた
+					if (!gameOver) {
+						pressedDie = true;
+						gameOver = true;
+						diedScDownY = _sc->Y() * 50;
+						vy = 0;
+					}
+				}
+				else {
+					y = _sc->Y() * 50 - 50;
+					vy = 0;
+					HitEffect(_sc->Type(), _sc->X(), _sc->Y());
+				}
 			}
-			y = _sc->Y() * 50 - 50;
-			vy = 0;
-			HitEffect(_sc->Type());
 			return true;
 		}
 	}
@@ -78,16 +93,23 @@ bool CMe::CollidedWith(CScaffold* _sc) {
 	return false;
 }
 
-void CMe::HitEffect(ScaffoldType _type) {
+void CMe::HitEffect(ScaffoldType _type,int _x,int _y) {
 	switch (_type) {
 	case JUMP:
-		vy -= 10;
+		vy -= 7;
 		break;
 	case SPEED_UP:
-		vx = 3;
+		vx = 4;
 		break;
 	case SPEED_DOWN:
 		vx = 0.5;
+		break;
+	case GOAL:
+		if (x+vx >= _x*50) {
+			x = _x*50;
+			gameClear = true;
+			vx = 0;
+		}
 		break;
 	}
 }

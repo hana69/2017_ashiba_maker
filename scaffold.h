@@ -7,7 +7,7 @@ struct NecessaryInfoToMake {
 };
 
 class CScaffold {
-	static const int cost[ScaffoldTypeNum];
+	
 public:
 	CScaffold();
 	CScaffold(ScaffoldType,int _xPlace,int _yPlace);
@@ -16,7 +16,6 @@ public:
 	void HitEffect();
 
 	ScaffoldType Type() { return type; };
-	int Cost() { return cost[type]; };
 	float X() { return x; };
 	float Y() { return y; };
 protected:

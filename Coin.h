@@ -4,6 +4,7 @@
 class CCoin {
 public:
 	CCoin(int _width);
+	void Reset();
 	void Draw(int _scroll);
 
 	bool Add(int x,int y);
@@ -13,6 +14,8 @@ public:
 private:
 
 	bool valid[500][15];
+	bool validMem[500][15];
+
 	const int width;
 	const int graph;
 };

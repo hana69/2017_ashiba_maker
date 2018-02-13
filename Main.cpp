@@ -1,10 +1,9 @@
 #include "main.h"
 
-CMain::CMain()
-	:TITLE_S(&MAIN_S),MAIN_S(&TITLE_S)
-{
+CMain::CMain(){
 	frame = tempframe=0;
-	scene = &TITLE_S;
+	scene = TITLE_S;
+	title.Start();
 }
 ///////////パブリック関数///////////////
 void CMain::Awake(){
@@ -14,10 +13,22 @@ void CMain::Awake(){
 }
 
 void CMain::GameLoop(){
-	
-	scene->Update();
-	if (scene -> Changed()) {
-		scene = (CScene*)scene->Next();
+	switch (scene) {
+	case TITLE_S:
+		title.Update();
+		if (title.Changed()) {
+			scene = MAIN_S;
+			main.Start(title.SelectedStageNum());
+			SetFontSize(15);
+		}
+		break;
+	case MAIN_S:
+		main.Update();
+		if (main.OperatedReturnTitle()) {
+			scene = TITLE_S;
+			title.Start();
+		}
+		break;
 	}
 	frame++;
 }

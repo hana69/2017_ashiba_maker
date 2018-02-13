@@ -6,18 +6,29 @@
 
 class CActionField{
 public:
-	CActionField();
+	CActionField(int _stageNum);
 	~CActionField();
 	
 	void Update(int _scroll);
 	void Make(NecessaryInfoToMake _info,int _scroll);
 	void Restart();
 
+	bool MeGotCoin() { return coinGotFlag; };
 	bool GameOvered() { return me.GameOver(); };
+	bool GameCleared() { return me.GameClear(); };
+	bool MenuOpening() { return menuOpening; };
+
+	void CloseMenu() { menuOpening = false; };
+
+	void OnlyDraw(int _scroll);
+
 	int RightEdge() { return width; };
+	int MeX() { return me.X(); };
 private:
-	void Collision();
 	void Draw(int _scroll);
+	void Collision();
+	
+		void DrawLimit(int _scroll);
 	void Move();
 
 	CScaffold firstSc[500][15];
@@ -30,6 +41,11 @@ private:
 	int height;
 	
 	bool returnTitleFlag;
+	bool coinGotFlag;
+	bool menuOpening;
+
+	static int limitdata[10];
+	static int mapdata[10];
 
 	CMe me;
 	CCoin coin;

@@ -21,6 +21,7 @@
 #define LIGHTBLUE GetColor( 128 , 255 , 255 )
 #define PURPLE GetColor( 128 , 0 , 128)
 #define BROWN GetColor(128,64,0)
+#define ORANGE GetColor( 255 , 128 , 0 )
 
 /////エラー時脱出用関数////////
 
@@ -50,8 +51,11 @@ enum ScaffoldType {
 	SPEED_DOWN,
 	SPEED_UP,
 	NORMAL,
+	GOAL,
 	ScaffoldTypeNum
 };
+
+const int scaffoldCost[ScaffoldTypeNum] = {2,2,2,1};
 
 static int scaffoldGraph(ScaffoldType _type) {
 	static int graph[ScaffoldTypeNum] = {};
@@ -63,4 +67,4 @@ static int scaffoldGraph(ScaffoldType _type) {
 
 const int DRAW_AREA_TOP = WINDOW_HEIGHT - 50 * 3 - 20 - 1,
 		  DRAW_AREA_LEFT = 20,
-		  DRAW_AREA_RIGHT = WINDOW_WIDTH - (20 * 2 + 50);
+		  DRAW_AREA_RIGHT = WINDOW_WIDTH - (20 * 2 + 50)-11;

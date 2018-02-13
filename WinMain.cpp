@@ -6,7 +6,7 @@
 
 
 int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
-
+	SetOutApplicationLogValidFlag(false);
 	SetWindowText("Title");
 	//SetWindowIconID(101);
 	SetGraphMode(WINDOW_WIDTH , WINDOW_HEIGHT , 16 );

@@ -17,15 +17,21 @@ public:
 	bool CollidedWith(CScaffold* _sc);
 
 	bool GameOver() { return gameOver; };
+	bool GameClear() { return gameClear; };
 
 	int X() { return x; };
 	int Y() { return y; };
 private:
-	void HitEffect(ScaffoldType);
+	void HitEffect(ScaffoldType,int _x,int _y);
 
 	bool hitUnderSide;
-
+	int diedScUpY;
+	int diedScDownY;
+	bool pressedDie;
+	
 	bool gameOver;
+	bool gameClear;
+
 	int graph;
 	float x,y;
 	float vx, vy;

@@ -20,11 +20,16 @@ GameOverMenuState CGameOverMenu::Update() {
 			DrawGraph(x, y, gameOverGraph[0], true);
 		}
 	}
-	if (mouse[0].LeftPushed() && mouse[0].Insided()){
-		return RETRY;
+
+	if (mouse[0].Insided()) {
+		if (mouse[0].LeftPushed()) {
+			return RETRY;
+		}
 	}
-	else if (mouse[1].LeftPushed() && mouse[1].Insided()) {
-		return RETURN_TO_TITLE;
+	else if (mouse[1].Insided()) {
+		if (mouse[1].LeftPushed()) {
+			return RETURN_TO_TITLE;
+		}
 	}
 	return NO_ACTION;
 }
