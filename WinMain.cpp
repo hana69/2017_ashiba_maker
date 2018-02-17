@@ -1,12 +1,13 @@
-#include "main.h"
+
 #include"key.h"
+#include"StageManager.h"
 
 #define FPS 60
 
 
 
 int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
-	SetOutApplicationLogValidFlag(false);
+	SetOutApplicationLogValidFlag(false);//LogÇèoóÕÇµÇ»Ç¢
 	SetWindowText("Title");
 	//SetWindowIconID(101);
 	SetGraphMode(WINDOW_WIDTH , WINDOW_HEIGHT , 16 );
@@ -16,11 +17,12 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
 
 	//SetTransColor(155,155,15);
 
-	CMain Main;
-	Main.Awake();
+	/*CMain Main;
+	Main.Awake();*/
+	StageManager stageManager;
 
 	while( ScreenFlip()==0 && ProcessMessage()==0 && ClearDrawScreen()==0 ){
-		Main.GameLoop();
+		stageManager.UpDate();
 		/*if (loopEscapeFlag==true) {
 			loopEscapeFlag = false;
 			break;

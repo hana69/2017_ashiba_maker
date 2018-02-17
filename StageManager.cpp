@@ -1,67 +1,85 @@
-#include"Scene.h"
+#include"StageManager.h"
 #include"key.h"
 #include"mouse.h"
 #include"DrawGameOver.h"
 #include"DrawGameClear.h"
 #include"menu.h"
+StageManager::StageManager() 
+	:stageSelecting(true)
+{}
 
-
-///////////////////////ÇΩÇ¢Ç∆ÇÈ/////////////////////////
-CTitle_S::CTitle_S()
-	:stageNum(0),nowSelectableStage(8)
-{
-	graph[0] = LoadGraph("noseResource/title_NoAction.png");
-	graph[1] = LoadGraph("noseResource/title_Wheeled.png");
-	explainGraph = LoadGraph("noseResource/title_explain.png");
+void StageManager::UpDate() {
+	static StageSelector stageSelector;
+	if (stageSelecting) {
+		if (stageSelector.SelectFinished()) {
+			stage = new Stage(stageSelector.SelectedStage());
+			stageSelecting = false;
+		}
+	}
+	else{
+		stage->Update();
+	}
 }
 
-void CTitle_S::Start() {
-	stageNum = 0;
+//////////////////////////////////////////////////////
+Stage::Stage(int stageNum) 
+{}
+
+CMouse StageSelector::mouse;
+StageSelector::StageSelector()
+	:selectingStageNum(TUTORIAL), nowSelectableStageNumMax(FINALSTAGE_NUM)
+{
 	SetFontSize(68);
 	ChangeFontType(DX_FONTTYPE_ANTIALIASING_4X4);
 }
 
-void CTitle_S::Update() {
-	static CMouse mouse;
-	int wheelNum = mouse.Wheel();
-	if (wheelNum!=0) {
-		DrawGraph(0, 0, graph[1], true);
-		if (wheelNum < 0) {
-			stageNum--;
-			if (stageNum < 0) {
-				stageNum = 0;
-			}
-		}
-		else if (wheelNum > 0) {
-			stageNum++;
-			if (stageNum > nowSelectableStage) {
-				stageNum = nowSelectableStage;
-			}
-		}
-	}
-	else {
-		DrawGraph(0, 0, graph[0], true);
-	}
+bool StageSelector::SelectFinished() {
+	SelectStageByMouse();
+	static int explainGraph = LoadGraph("noseResource/title_explain.png");
 	DrawGraph(0, 0, explainGraph, true);
 
+	/////////////////élã˜Ç…ë´èÍÇÃâÊëúÇï\é¶/////////////////////////////////////
 	DrawGraph(0, 0, scaffoldGraph(NORMAL), true);
 	DrawGraph(WINDOW_WIDTH - 50, 0, scaffoldGraph(SPEED_UP), true);
 	DrawGraph(0, WINDOW_HEIGHT - 50, scaffoldGraph(SPEED_DOWN), true);
 	DrawGraph(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 50, scaffoldGraph(JUMP), true);
+	//////////////////////////////////////////////////////////////////////
 
-	DrawFormatString(580, 510, RED, "%d", stageNum);
-	if (stageNum==0) {
+	DrawFormatString(580, 510, RED, "%d", selectingStageNum);
+	if (selectingStageNum == TUTORIAL) {
 		static int tutorial_graph = LoadGraph("noseResource/tutorial_string.png");
-		DrawGraph(WINDOW_WIDTH/2-215,580,tutorial_graph,true);
+		DrawGraph(WINDOW_WIDTH / 2 - 215, 580, tutorial_graph, true);
+	}
+	return mouse.LeftReleased();
+}
+
+void StageSelector::SelectStageByMouse() {
+	static int noWheelingGraph = LoadGraph("noseResource/title_NoAction.png"),
+				wheelingGraph = LoadGraph("noseResource/title_Wheeled.png");
+
+	int wheelNum = mouse.Wheel();
+
+	if (wheelNum != 0) {
+		DrawGraph( 0 , 0 , wheelingGraph , true );
+	}
+	else {
+		DrawGraph( 0 , 0 , noWheelingGraph , true);
+	}
+
+	if (wheelNum < 0) {
+		selectingStageNum--;
+		if (selectingStageNum < 0) {
+			selectingStageNum = 0;
+		}
+	}
+	else if (wheelNum > 0) {
+		selectingStageNum++;
+		if (selectingStageNum > nowSelectableStageNumMax) {
+			selectingStageNum = nowSelectableStageNumMax;
+		}
 	}
 }
 
-bool CTitle_S::Changed(){
-	if (Mouse.LeftPushed()) {
-		return true;
-	}
-	return false;
-}
 
 ///////////////////////ÇﬂÇ¢ÇÒ/////////////////////////
 CMain_S::CMain_S()
