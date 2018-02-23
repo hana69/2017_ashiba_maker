@@ -60,8 +60,8 @@ void CScaffoldDrawer::Draw() {
 			}
 		}*/
 		if (cX > 0 && cY > 0) {
-			for (int i = tX / 50 + tX % 50 / 25; i <= X / 50 + X % 50 / 25 - 1 && point >= needPoint+ scaffoldCost[selector.SelectingType()] && x1 < i * 50 && i * 50 < x2;i++) {
-				needPoint += scaffoldCost[selector.SelectingType()];
+			for (int i = tX / 50 + tX % 50 / 25; i <= X / 50 + X % 50 / 25 - 1 && point >= needPoint+ scaffoldCost[(unsigned)selector.SelectingType()] && x1 < i * 50 && i * 50 < x2;i++) {
+				needPoint += scaffoldCost[(unsigned)selector.SelectingType()];
 				writingWidth++;
 				for (int j = tY / 50 + tY % 50 / 25; j <= Y / 50 + Y % 50 / 25 - 1 && y1 < j * 50 && j * 50 <y2; j++) {
 					DrawGraph(i * 50, j * 50, scaffoldGraph(selector.SelectingType()), true);				
@@ -70,8 +70,8 @@ void CScaffoldDrawer::Draw() {
 			}
 		}
 		else if (cX > 0 && cY < 0) {
-			for (int i = tX / 50 + tX % 50 / 25; i <= X / 50 + X % 50 / 25 - 1 && point >= needPoint+ scaffoldCost[selector.SelectingType()] && x1 < i * 50 && i * 50 < x2 ; i++) {
-				needPoint += scaffoldCost[selector.SelectingType()];
+			for (int i = tX / 50 + tX % 50 / 25; i <= X / 50 + X % 50 / 25 - 1 && point >= needPoint+ scaffoldCost[(unsigned)selector.SelectingType()] && x1 < i * 50 && i * 50 < x2 ; i++) {
+				needPoint += scaffoldCost[(unsigned)selector.SelectingType()];
 				writingWidth++;
 				for (int j = tY / 50 + tY % 50 / 25 - 1; j >= Y / 50 + Y % 50 / 25 && y1 < j * 50 && j * 50 <y2;j--) {
 					DrawGraph(i * 50, j * 50, scaffoldGraph(selector.SelectingType()), true);
@@ -80,8 +80,8 @@ void CScaffoldDrawer::Draw() {
 			}
 		}
 		else if (cX < 0 && cY > 0) {
-			for (int i = tX / 50 + tX % 50 / 25 - 1; i >= X / 50 + X % 50 / 25 && point >= needPoint+ scaffoldCost[selector.SelectingType()] && x1 < i * 50 && i * 50 < x2; i--) {
-				needPoint += scaffoldCost[selector.SelectingType()];
+			for (int i = tX / 50 + tX % 50 / 25 - 1; i >= X / 50 + X % 50 / 25 && point >= needPoint+ scaffoldCost[(unsigned)selector.SelectingType()] && x1 < i * 50 && i * 50 < x2; i--) {
+				needPoint += scaffoldCost[(unsigned)selector.SelectingType()];
 				writingWidth++;
 				for (int j = tY / 50 + tY % 50 / 25; j <= Y / 50 + Y % 50 / 25 - 1 && y1 < j * 50 && j * 50 < y2; j++) {
 					DrawGraph(i * 50, j * 50, scaffoldGraph(selector.SelectingType()), true);
@@ -90,8 +90,8 @@ void CScaffoldDrawer::Draw() {
 			}
 		}
 		else {
-			for (int i = tX / 50 + tX % 50 / 25 - 1; i >= X / 50 + X % 50 / 25 && point >= needPoint+ scaffoldCost[selector.SelectingType()] && x1 < i * 50 && i * 50 < x2; i--) {
-				needPoint += scaffoldCost[selector.SelectingType()];
+			for (int i = tX / 50 + tX % 50 / 25 - 1; i >= X / 50 + X % 50 / 25 && point >= needPoint+ scaffoldCost[(unsigned)selector.SelectingType()] && x1 < i * 50 && i * 50 < x2; i--) {
+				needPoint += scaffoldCost[(unsigned)selector.SelectingType()];
 				writingWidth++;
 				for (int j = tY / 50 + tY % 50 / 25 - 1; j >= Y / 50 + Y % 50 / 25 && y1 < j * 50 && j * 50 < y2; j--) {
 					DrawGraph(i * 50, j * 50, scaffoldGraph(selector.SelectingType()), true);
@@ -147,13 +147,13 @@ int	CScaffoldSelector::selecting = 0;
 int	CScaffoldSelector::pointing = 0;
 CScaffoldSelector::CScaffoldSelector(int _x1, int _y1, int _x2, int _y2)
 	:x1(_x1), x2(_x2), y1(_y1), y2(_y2),
-	init(false),selectingType(NORMAL)
+	init(false),selectingType(ScaffoldType::NORMAL)
 {
-	for (int i = 0; i <= NORMAL;i++) {
+	for (int i = 0; i <= (unsigned)ScaffoldType::NORMAL;i++) {
 		selectableObj[i].SetPosition(x1+20, y1+20+i*70);
 		selectableObj[i].SetType((ScaffoldType)i);
 	}
-	selectingType = NORMAL;
+	selectingType = ScaffoldType::NORMAL;
 	if (selecting == 0) {
 		selecting = LoadGraph("noseResource/selecting.png");
 	}
@@ -175,7 +175,7 @@ void CScaffoldSelector::Draw(int _point, int _needPoint) {
 	DrawFormatString(x1 + 15, y1 - 20, YELLOW, "MP:%d", _point);
 	DrawFormatString(x1 - 75, y1 - 3, RED, "‚Â‚­‚Á‚½Œã‚ÌMP:%d", _point - _needPoint);
 	
-	for (int i = 0; i <= NORMAL; i++) {
+	for (int i = 0; i <= (unsigned)ScaffoldType::NORMAL; i++) {
 		selectableObj[i].Draw(_point);
 		if ( selectingType == (ScaffoldType)i ) {
 			selectableObj[i].DrawSelecting();
@@ -184,14 +184,14 @@ void CScaffoldSelector::Draw(int _point, int _needPoint) {
 }
 
 CScaffoldSelector::CSelectableObj::CSelectableObj()
-	:x(0), y(0), type(NORMAL)
+	:x(0), y(0), type(ScaffoldType::NORMAL)
 {}
 
 void CScaffoldSelector::CSelectableObj::Draw(int _point) {
 	static int unselectableGraph=LoadGraph("noseResource/unselectable.png");
 	
 	DrawGraph(x, y, scaffoldGraph(type), true);
-	if (_point < scaffoldCost[type]) {
+	if (_point < scaffoldCost[(unsigned)type]) {
 		DrawExtendGraph(x, y,x+50,y+50, unselectableGraph, true);
 	}
 	if (Mouse.Insided()) {

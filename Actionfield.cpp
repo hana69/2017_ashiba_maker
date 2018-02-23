@@ -43,7 +43,7 @@ CActionField::CActionField(int _stageNum)
 			}
 			GetPixelSoftImage(mapdata[_stageNum], i, j, &r , &g , &b, &a);
 			if (r == 128 && g == 128 && b == 128) {
-				sc[i].push_back(new CScaffold(NORMAL,i,j) );
+				sc[i].push_back(new CScaffold(ScaffoldType::NORMAL,i,j) );
 				firstSc[i][j] = *(sc[i].back());
 				firstPut[i][j] = true;
 			}
@@ -51,22 +51,22 @@ CActionField::CActionField(int _stageNum)
 				coin.Add(i, j);
 			}
 			else if (r == 255 && g == 0 && b == 255) {
-				sc[i].push_back(new CScaffold(GOAL, i, j));
+				sc[i].push_back(new CScaffold(ScaffoldType::GOAL, i, j));
 				firstSc[i][j] = *(sc[i].back());
 				firstPut[i][j] = true;
 			}
 			else if (r == 255 && g == 0 && b == 0) {
-				sc[i].push_back(new CScaffold(JUMP, i, j));
+				sc[i].push_back(new CScaffold(ScaffoldType::JUMP, i, j));
 				firstSc[i][j] = *(sc[i].back());
 				firstPut[i][j] = true;
 			}
 			else if (r == 255 && g == 255 && b == 0) {
-				sc[i].push_back(new CScaffold(SPEED_UP, i, j));
+				sc[i].push_back(new CScaffold(ScaffoldType::SPEED_UP, i, j));
 				firstSc[i][j] = *(sc[i].back());
 				firstPut[i][j] = true;
 			}
 			else if (r == 0 && g == 0 && b == 255) {
-				sc[i].push_back(new CScaffold(SPEED_DOWN, i, j));
+				sc[i].push_back(new CScaffold(ScaffoldType::SPEED_DOWN, i, j));
 				firstSc[i][j] = *(sc[i].back());
 				firstPut[i][j] = true;
 			}

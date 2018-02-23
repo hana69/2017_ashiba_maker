@@ -95,16 +95,16 @@ bool CMe::CollidedWith(CScaffold* _sc) {
 
 void CMe::HitEffect(ScaffoldType _type,int _x,int _y) {
 	switch (_type) {
-	case JUMP:
+	case ScaffoldType::JUMP:
 		vy -= 7;
 		break;
-	case SPEED_UP:
+	case ScaffoldType::SPEED_UP:
 		vx = 4;
 		break;
-	case SPEED_DOWN:
+	case ScaffoldType::SPEED_DOWN:
 		vx = 0.5;
 		break;
-	case GOAL:
+	case ScaffoldType::GOAL:
 		if (x+vx >= _x*50) {
 			x = _x*50;
 			gameClear = true;

@@ -3,7 +3,7 @@
 //////////////////CScaffold//////////////////////////
 ////////コンストラクタ//////////
 CScaffold::CScaffold() 
-	:type(NORMAL),x(0),y(0)
+	:type(ScaffoldType::NORMAL),x(0),y(0)
 {}
 
 CScaffold::CScaffold(ScaffoldType _type,int _xPlace,int _yPlace)

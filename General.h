@@ -46,23 +46,26 @@ static bool EscapeProgram(const char* _mes,bool escapeScene=false) {
 ////////////////////////////////////////////////////////////////
 
 /////ÉQÅ[ÉÄópíËêî/////
-enum ScaffoldType {
+const int TUTORIAL = 0;
+const int FINALSTAGE_NUM = 8;
+
+enum class ScaffoldType {
 	JUMP,
 	SPEED_DOWN,
 	SPEED_UP,
 	NORMAL,
 	GOAL,
-	ScaffoldTypeNum
+	ALLNUM
 };
 
-const int scaffoldCost[ScaffoldTypeNum] = {2,2,2,1};
+const int scaffoldCost[(unsigned)ScaffoldType::ALLNUM] = {2,2,2,1};
 
 static int scaffoldGraph(ScaffoldType _type) {
-	static int graph[ScaffoldTypeNum] = {};
-	if (graph[_type] == 0) {
-		LoadDivGraph("noseResource/Scaffold.png", (int)ScaffoldTypeNum, 3, 3, 50, 50, graph);
+	static int graph[(unsigned)ScaffoldType::ALLNUM] = {};
+	if (graph[(unsigned)_type] == 0) {
+		LoadDivGraph("noseResource/Scaffold.png", (int)ScaffoldType::ALLNUM, 3, 3, 50, 50, graph);
 	}
-	return graph[_type];
+	return graph[(unsigned)_type];
 };
 
 const int DRAW_AREA_TOP = WINDOW_HEIGHT - 50 * 3 - 20 - 1,

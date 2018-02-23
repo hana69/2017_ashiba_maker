@@ -1,10 +1,7 @@
-
 #include"key.h"
 #include"StageManager.h"
 
 #define FPS 60
-
-
 
 int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
 	SetOutApplicationLogValidFlag(false);//LogÇèoóÕÇµÇ»Ç¢
@@ -34,8 +31,5 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
 	}
         
 	DxLib_End();
-
-//	ShellExecute( GetMainWindowHandle(),"open" ,"Launcher.exe" , NULL , NULL , SW_SHOW );
-
 	return 0;
 } 

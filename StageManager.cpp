@@ -1,6 +1,8 @@
 #include"StageManager.h"
+#include"StageSelector.h"
+#include"Stage.h"
+
 #include"key.h"
-#include"mouse.h"
 #include"DrawGameOver.h"
 #include"DrawGameClear.h"
 #include"menu.h"
@@ -10,6 +12,7 @@ StageManager::StageManager()
 
 void StageManager::UpDate() {
 	static StageSelector stageSelector;
+	static Stage* stage=NULL;
 	if (stageSelecting) {
 		if (stageSelector.SelectFinished()) {
 			stage = new Stage(stageSelector.SelectedStage());
@@ -17,77 +20,21 @@ void StageManager::UpDate() {
 		}
 	}
 	else{
-		stage->Update();
-	}
-}
-
-//////////////////////////////////////////////////////
-Stage::Stage(int stageNum) 
-{}
-
-CMouse StageSelector::mouse;
-StageSelector::StageSelector()
-	:selectingStageNum(TUTORIAL), nowSelectableStageNumMax(FINALSTAGE_NUM)
-{
-	SetFontSize(68);
-	ChangeFontType(DX_FONTTYPE_ANTIALIASING_4X4);
-}
-
-bool StageSelector::SelectFinished() {
-	SelectStageByMouse();
-	static int explainGraph = LoadGraph("noseResource/title_explain.png");
-	DrawGraph(0, 0, explainGraph, true);
-
-	/////////////////四隅に足場の画像を表示/////////////////////////////////////
-	DrawGraph(0, 0, scaffoldGraph(NORMAL), true);
-	DrawGraph(WINDOW_WIDTH - 50, 0, scaffoldGraph(SPEED_UP), true);
-	DrawGraph(0, WINDOW_HEIGHT - 50, scaffoldGraph(SPEED_DOWN), true);
-	DrawGraph(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 50, scaffoldGraph(JUMP), true);
-	//////////////////////////////////////////////////////////////////////
-
-	DrawFormatString(580, 510, RED, "%d", selectingStageNum);
-	if (selectingStageNum == TUTORIAL) {
-		static int tutorial_graph = LoadGraph("noseResource/tutorial_string.png");
-		DrawGraph(WINDOW_WIDTH / 2 - 215, 580, tutorial_graph, true);
-	}
-	return mouse.LeftReleased();
-}
-
-void StageSelector::SelectStageByMouse() {
-	static int noWheelingGraph = LoadGraph("noseResource/title_NoAction.png"),
-				wheelingGraph = LoadGraph("noseResource/title_Wheeled.png");
-
-	int wheelNum = mouse.Wheel();
-
-	if (wheelNum != 0) {
-		DrawGraph( 0 , 0 , wheelingGraph , true );
-	}
-	else {
-		DrawGraph( 0 , 0 , noWheelingGraph , true);
-	}
-
-	if (wheelNum < 0) {
-		selectingStageNum--;
-		if (selectingStageNum < 0) {
-			selectingStageNum = 0;
+		if (stage==NULL) {
+			DrawString(0,0,"!!stageポインタがNULLのままです!!",YELLOW);
 		}
-	}
-	else if (wheelNum > 0) {
-		selectingStageNum++;
-		if (selectingStageNum > nowSelectableStageNumMax) {
-			selectingStageNum = nowSelectableStageNumMax;
+		else {
+			stage->Update();
 		}
 	}
 }
-
 
 ///////////////////////めいん/////////////////////////
 CMain_S::CMain_S()
 	:stageNum(1),scroll(0),returnTitleFlag(false)
 {}
 
-void CMain_S::Start(int _stageNum) {
-	
+void CMain_S::Start(int _stageNum) {	
 	field = new CActionField(_stageNum);
 	if (_stageNum == 0) {
 		tutorial = new CTutorial();
@@ -99,16 +46,7 @@ void CMain_S::Start(int _stageNum) {
 }
 
 void CMain_S::Update() {
-	static int backGraph = LoadGraph("noseResource/main_back.png");
-	DrawGraph(0,0,backGraph,true);
-	///////////ぐりっど////////////////////////
-	for (int i = 0; i <= field->RightEdge()*50; i += 50) {
-		DrawLine(i-scroll, 0, i - scroll, WINDOW_HEIGHT, BLUE);
-	}
-	for (int j = 0; j < WINDOW_HEIGHT;j+=50) {
-		DrawLine(0, j, WINDOW_WIDTH,j, BLUE);
-	}
-	//////////////////////////////////////////
+	
 	if (stageNum == 0) {	
 		if (!tutorial->Explaining()) {
 			if (tutorial->State()>=4) {
@@ -252,18 +190,5 @@ void CMain_S::Update() {
 }
 
 void CMain_S::Scroll() {
-	static CMouse mouse;
-	static int a;
-	a+=mouse.Wheel(1)*35;
-	if (a>50 ) {
-		scroll += 50;
-		a = 0;
-	}
-	else if (a<-50) {
-		scroll -= 50;
-		a = 0;
-	}
-	if (scroll<0) {
-		scroll = 0;
-	}
+	
 }
