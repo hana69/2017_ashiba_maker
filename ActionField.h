@@ -10,7 +10,7 @@ public:
 	~CActionField();
 	
 	void Update(int _scroll);
-	void Make(NecessaryInfoToMake _info,int _scroll);
+	void Make( int _x , int _y , ScaffoldType _type , int _scroll );
 	void Restart();
 
 	bool MeGotCoin() { return coinGotFlag; };

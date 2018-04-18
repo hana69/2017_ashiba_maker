@@ -130,8 +130,8 @@ void CActionField::OnlyDraw(int _scroll) {
 
 }
 
-void CActionField::Make(NecessaryInfoToMake _info,int _scroll) {
-	for (int i = max(DRAW_AREA_LEFT / 50+1 , _info.x1); i <= min(DRAW_AREA_RIGHT/50, _info.x2); i++) {
+void CActionField::Make(int _x,int _y,ScaffoldType _type,int _scroll) {
+	/*for (int i = max(DRAW_AREA_LEFT / 50+1 , _info.x1); i <= min(DRAW_AREA_RIGHT/50, _info.x2); i++) {
 		int temp = 0;
 		if (!sc[i + (_scroll / 50)].empty()) {
 			temp = sc[i + (_scroll / 50)].back()->Y();
@@ -142,6 +142,9 @@ void CActionField::Make(NecessaryInfoToMake _info,int _scroll) {
 				temp++;
 			}
 		}
+	}*/
+	if (sc[_x / 50 + (_scroll / 50)].size() <= 9) {
+		sc[_x / 50 + (_scroll / 50)].push_back(new CScaffold(_type, _x / 50 + (_scroll / 50), _y / 50));
 	}
 }
 
@@ -217,6 +220,7 @@ void CActionField::Draw(int _scroll) {
 		for (int i = 0; i < width; i++) {
 			if (0 < i*50+50-_scroll && i*50-_scroll < WINDOW_WIDTH) {
 				DrawGraph(i*50-_scroll,limit[i]*50-5,limitGraph,true);
+				//DrawFormatString(0,i*15,YELLOW,"%d",limit[i]);
 			}
 		}
 		

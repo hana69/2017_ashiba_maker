@@ -47,7 +47,7 @@ void CMain_S::Start(int _stageNum) {
 
 void CMain_S::Update() {
 	
-	if (stageNum == 0) {	
+	/*if (stageNum == 0) {	
 		if (!tutorial->Explaining()) {
 			if (tutorial->State()>=4) {
 				Scroll();
@@ -124,19 +124,9 @@ void CMain_S::Update() {
 			scaffoldDrawer.OnlyDraw();
 			tutorial->Update(scroll, field->MeX());
 		}
-	}
-	else {
-		Scroll();
-		field->Update(scroll);
-		if (field->MeGotCoin()) {
-			scaffoldDrawer.AddCoin();
-		}
-
-		scaffoldDrawer.Update();
-		if (scaffoldDrawer.DrawFinished()) {
-			field->Make(scaffoldDrawer.DrawnScaffold(), scroll);
-		}
-
+	}*/
+	/*else {
+		
 		if (field->MenuOpening()) {
 			static CMenu menu;
 			switch (menu.Update()) {
@@ -185,7 +175,7 @@ void CMain_S::Update() {
 				break;
 			}
 		}
-	}
+	}*/
 	
 }
 

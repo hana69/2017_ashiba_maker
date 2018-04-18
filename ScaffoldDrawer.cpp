@@ -50,16 +50,9 @@ void CScaffoldDrawer::Draw() {
 	DrawBox(x1 , y1 , x2 , y2 , PURPLE , false);
 	
 	if (writing) {
-		const int tX = Mouse.TempX(), X = Mouse.X(), cX = Mouse.ChangeX(),
-				  tY = Mouse.TempY(), Y = Mouse.Y(), cY = Mouse.ChangeY();
-		/*for (int i = tX / 50 + (tX % 50) / 25,nowCX=0; abs(nowCX) <= cX; i += PlusMinus(Mouse.ChangeX()), nowCX += PlusMinus(Mouse.ChangeX()) ) {
-			for (int j = tY / 50 + (tY % 50) / 25,nowCY=0; abs(nowCY) <= cY; j += PlusMinus(Mouse.ChangeY()), nowCY += PlusMinus(Mouse.ChangeY()) ) {
-				if (x1 < i*50 && i*50 < x2 && y1 < j*50 && j*50 <y2) {
-					DrawGraph(i * 50, j * 50, scaffoldGraph(selector.SelectingType()), true);
-				}
-			}
-		}*/
-		if (cX > 0 && cY > 0) {
+		/*const int tX = Mouse.TempX(), X = Mouse.X(), cX = Mouse.ChangeX(),
+				  tY = Mouse.TempY(), Y = Mouse.Y(), cY = Mouse.ChangeY();*/
+		/*if (cX > 0 && cY > 0) {
 			for (int i = tX / 50 + tX % 50 / 25; i <= X / 50 + X % 50 / 25 - 1 && point >= needPoint+ scaffoldCost[(unsigned)selector.SelectingType()] && x1 < i * 50 && i * 50 < x2;i++) {
 				needPoint += scaffoldCost[(unsigned)selector.SelectingType()];
 				writingWidth++;
@@ -98,18 +91,21 @@ void CScaffoldDrawer::Draw() {
 					writed = true;
 				}
 			}
-		}
+		}*/
+		DrawGraph( Mouse.X() / 50 * 50, Mouse.Y() / 50 * 50 , scaffoldGraph(selector.SelectingType()) , true);
 	}
-	if (!writed) {
+	/*if (!writed) {
 		needPoint = 0;
-	}
+	}*/
 	
 	if (Mouse.LeftReleased() && writing) {
 		writing = false;
 		drawFinished = true;
-		SetInfo();
+		drawnType = selector.SelectingType();
+		drawnSpotX = Mouse.X();
+		drawnSpotY = Mouse.Y();
 	}
-	writingWidth = 0;
+//	writingWidth = 0;
 	if (Mouse.Insided()) {
 		if (Mouse.LeftPushed() && !writing) {
 			writing = true;
@@ -120,9 +116,10 @@ void CScaffoldDrawer::Draw() {
 }
 	
 	void CScaffoldDrawer::SetInfo() {
-		writingObj.type = selector.SelectingType();
 		
-		const int tX = Mouse.TempX(), X = Mouse.X(), cX = Mouse.ChangeX(),
+
+		//writingObj.type = selector.SelectingType();
+		/*const int tX = Mouse.TempX(), X = Mouse.X(), cX = Mouse.ChangeX(),
 				  tY = Mouse.TempY(), Y = Mouse.Y(), cY = Mouse.ChangeY();
 		if (cX > 0) {
 			writingObj.x1 = tX/ 50 + tX % 50/ 25;
@@ -139,7 +136,7 @@ void CScaffoldDrawer::Draw() {
 		else {
 			writingObj.y1 = Y / 50 + Y % 50 / 25;
 			writingObj.y2 = tY / 50 + tY % 50 / 25 - 1;
-		}
+		}*/
 	}
 ///////////////////////////CSelectField////////////////////////////////////
 

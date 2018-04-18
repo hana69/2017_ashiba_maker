@@ -55,11 +55,18 @@ public:
 	void Reset();
 
 	bool DrawFinished() ;
-	NecessaryInfoToMake DrawnScaffold() { return writingObj; };
+	ScaffoldType DrawnType() { return drawnType; };
+	int DrawnSpotX() { return drawnSpotX; };
+	int DrawnSpotY() { return drawnSpotY; };
+	//NecessaryInfoToMake DrawnScaffold() { return writingObj; };
 private:
 	void Draw();
 		void SetInfo();
 	NecessaryInfoToMake writingObj;
+
+	ScaffoldType drawnType;
+	int drawnSpotX,
+		drawnSpotY;
 
 	CScaffoldSelector selector;
 	

@@ -24,7 +24,7 @@ void Stage::Update() {
 			drawer.AddCoin();
 		}
 		if (drawer.DrawFinished()) {
-			field.Make(drawer.DrawnScaffold(), scroll);
+			field.Make(drawer.DrawnSpotX(),drawer.DrawnSpotY(),drawer.DrawnType(), scroll);
 		}
 	}
 	Scroll();
