@@ -3,7 +3,7 @@
 
 #define FPS 60
 
-#include"ClickableObj.h"
+#include"ClickObj.h"
 
 int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
 	SetOutApplicationLogValidFlag(false);//LogÇèoóÕÇµÇ»Ç¢
@@ -15,13 +15,8 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
 	ScreenFlip();
 
 	//SetTransColor(155,155,15);
-
-	/*CMain Main;
-	Main.Awake();*/
+	CMouse mouse(0,0, WINDOW_WIDTH,WINDOW_HEIGHT);
 	StageManager stageManager;
-	int graph[4]; LoadDivGraph("noseResource/ReturnToTitle_4in1.png", 4, 1, 4, 173, 20, graph);
-	ClickableObj obj(0, 0, 173, 20, graph);
-
 	while( ScreenFlip()==0 && ProcessMessage()==0 && ClearDrawScreen()==0 ){
 	//	stageManager.UpDate();
 		/*if (loopEscapeFlag==true) {
@@ -31,7 +26,12 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
 		if (Key.Pushed(KEYNAME.ESC)) {
 			break;
 		}
-		obj.Update();
+		if (mouse.Insided()) {
+
+			if (mouse.LeftReleased()) {
+				break;
+			}
+		}
 		Sleep(0);
 	}
         

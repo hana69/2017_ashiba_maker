@@ -1,15 +1,15 @@
 #pragma once
 #include"mouse.h"
-class ClickableObj {
+class ClickObj {
 public:
-	ClickableObj(int,int,int,int,int _graph[]);
+	ClickObj(int,int,int,int,int _graph[]);
 	void Update();
 	bool Clicked();
 private:
 	void SetNowState();
 	enum class MOUSE_STATE :unsigned{
 		NOT_SELECTING,
-		SELCTING,
+		SELECTING,
 		PUSHING,
 		RELEASED,
 		STATE_NUM
