@@ -2,6 +2,7 @@
 #include<string>
 #include"DxLib.h"
 #include"mouse.h"
+#include"General.h"
 
 int CTutorial::graph[] = {};
 CTutorial::CTutorial()

@@ -1,4 +1,6 @@
 #include"mouse.h"
+#include"Dxlib.h"
+
 
 CMouse::CMouse()
 :x(0),y(0),
@@ -7,10 +9,22 @@ tempX(0),tempY(0)
 	SetRange(0,0,0,0);
 }
 
-CMouse::CMouse(int _x1,int _y1,int _x2,int _y2)
+bool CMouse::nowLeftPushing = false;
+bool CMouse::nowRightPushing = false;
+bool CMouse::lastLeftPushing = false;
+bool CMouse::lastRightPushing = false;
+
+CMouse::CMouse(int _x1, int _y1, int _x2, int _y2)
 	:CMouse()
 {
 	SetRange(_x1, _y1, _x2, _y2);
+}
+
+void CMouse::Update() {
+	lastLeftPushing = nowLeftPushing;
+	lastRightPushing = nowRightPushing;
+	nowLeftPushing = GetMouseInput()&(MOUSE_INPUT_LEFT != 0);
+	nowRightPushing = GetMouseInput()&(MOUSE_INPUT_RIGHT != 0);
 }
 
 void CMouse::SetRange(int _x1,int _y1,int _x2,int _y2){
@@ -20,57 +34,30 @@ void CMouse::SetRange(int _x1,int _y1,int _x2,int _y2){
 	rangeY2 = _y2;
 }
 
-
 bool CMouse::RightPushed() {
-	static bool flag = false;
 
-	if (flag == false && GetMouseInput() &(MOUSE_INPUT_RIGHT != 0)) {
-		flag = true;
+	if (!lastRightPushing && nowRightPushing) {
 		return true;
 	}
-	
-	if (flag == true && !(GetMouseInput() &(MOUSE_INPUT_RIGHT != 0))) {
-		flag = false;
-	}
-
 	return false;
 
 }
 bool CMouse::LeftPushed() {
-	static bool flag = false;
-
-	if ( flag == false && GetMouseInput()&(MOUSE_INPUT_LEFT != 0) ) {
-		flag = true;
+	if (!lastLeftPushing && nowRightPushing) {
 		return true;
-	}
-	
-	if (flag == true && !(GetMouseInput()&(MOUSE_INPUT_LEFT != 0))) {
-		flag = false;
 	}
 
 	return false;
 }
 
 bool CMouse::RightReleased(){
-	static bool flag=false;
-	if( flag==false && GetMouseInput() &(MOUSE_INPUT_RIGHT != 0) ){
-		flag = true;
-	}
-	if( flag == true && !(GetMouseInput() &(MOUSE_INPUT_RIGHT != 0) ) ){
-		flag = false;
+	if (lastRightPushing && !nowRightPushing) {
 		return true;
 	}
-
 	return false;
 }
 bool CMouse::LeftReleased(){
-	static bool flag = false;
-
-	if(flag == false && GetMouseInput()&(MOUSE_INPUT_LEFT != 0) ){
-		flag = true;
-	}
-	if(flag==true && !(GetMouseInput()&(MOUSE_INPUT_LEFT != 0)) ){
-		flag = false;
+	if (lastLeftPushing && nowLeftPushing) {
 		return true;
 	}
 	return false;
@@ -92,10 +79,7 @@ int CMouse::ChangeY(){
 }
 
 bool CMouse::LeftPushing(){	
-	if (GetMouseInput()&(MOUSE_INPUT_LEFT != 0)) {
-		return true;
-	}
-	return false;
+	return nowLeftPushing;
 }
 
 bool CMouse::Insided(){

@@ -15,22 +15,17 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
 	ScreenFlip();
 
 	//SetTransColor(155,155,15);
-	CMouse mouse(0,0, WINDOW_WIDTH,WINDOW_HEIGHT);
+	CMouse mouse;
 	StageManager stageManager;
 	while( ScreenFlip()==0 && ProcessMessage()==0 && ClearDrawScreen()==0 ){
-	//	stageManager.UpDate();
+		mouse.Update();
+		stageManager.UpDate();
 		/*if (loopEscapeFlag==true) {
 			loopEscapeFlag = false;
 			break;
 		}*/
 		if (Key.Pushed(KEYNAME.ESC)) {
 			break;
-		}
-		if (mouse.Insided()) {
-
-			if (mouse.LeftReleased()) {
-				break;
-			}
 		}
 		Sleep(0);
 	}

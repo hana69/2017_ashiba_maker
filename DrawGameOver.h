@@ -1,5 +1,6 @@
 #pragma once
 #include"mouse.h"
+#include"General.h"
 
 enum GameOverMenuState {
 	NO_ACTION,

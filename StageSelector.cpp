@@ -1,5 +1,6 @@
 #include<DxLib.h>
 #include"StageSelector.h"
+#include"General.h"
 
 CMouse StageSelector::mouse;
 StageSelector::StageSelector()

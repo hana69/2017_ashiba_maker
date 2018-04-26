@@ -1,5 +1,5 @@
 #pragma once
-#include"mouse.h"
+
 class ClickObj {
 public:
 	ClickObj(int,int,int,int,int _graph[]);

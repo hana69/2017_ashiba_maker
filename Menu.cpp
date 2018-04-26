@@ -1,13 +1,13 @@
 #include"Menu.h"
 #include"ClickObj.h"
-
+#include"General.h"
 
 Menu::Menu(int _x,int _y)
 	:x(_x),y(_y)
 {}
 
 void Menu::Update() {
-	DrawBox(x, y, x + 200, y + 150, WHITE, true);
+	DrawBox(x, y, x + 200, y + 150, BLACK, true);
 	DrawBox(x, y, x + 200, y + 150, YELLOW, false);
 	for (auto i:texts) {
 		i->Update();
@@ -23,14 +23,14 @@ Pause::Pause()
 	:Menu(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 75),selectedText(Texts::RESUME)
 {
 	int graph[(unsigned)Texts::MAX][4] = {};
-	int w[3] = { 173 ,173 ,0 };
-	LoadDivGraph("noseResource/ReturnToStart_4in1.png", (unsigned)Texts::MAX, 1, (unsigned)Texts::MAX, w[0], 20, graph[(unsigned)Texts::RETURN_TO_START]);
-	LoadDivGraph("noseResource/ReturnToTitle_4in1.png", (unsigned)Texts::MAX, 1, (unsigned)Texts::MAX, w[1], 20, graph[(unsigned)Texts::RETURN_TO_TITLE]);
-	//LoadDivGraph("noseResource/ReturnToTitle_4in1.png", (unsigned)Texts::MAX, 1, (unsigned)Texts::MAX, w, 20, graph[(unsigned)Texts:::RESUME] );
+	int w = 173;
+	LoadDivGraph("noseResource/ReturnToStart_4in1.png", (unsigned)Texts::MAX, 1, (unsigned)Texts::MAX, w, 20, graph[(unsigned)Texts::RETURN_TO_START]);
+	LoadDivGraph("noseResource/ReturnToTitle_4in1.png", (unsigned)Texts::MAX, 1, (unsigned)Texts::MAX, w, 20, graph[(unsigned)Texts::RETURN_TO_TITLE]);
+	LoadDivGraph("noseResource/CloseMenu_4in1.png", (unsigned)Texts::MAX, 1, (unsigned)Texts::MAX, w, 20, graph[(unsigned)Texts::RESUME] );
 	int c = WINDOW_WIDTH / 2;
 	for (int i = 0; i < (int)Texts::MAX; i++) {
 		if (graph[i][0]!=0) {
-			texts.push_back(new ClickObj(c - w[i] / 2, y + 50 + i * 30, c + w[i] / 2, y + 50 + i * 30 + 20, graph[i]));
+			texts.push_back(new ClickObj(c - w / 2, y + 50 + i * 30, c + w / 2, y + 50 + i * 30 + 20, graph[i]));
 		}
 	}
 }

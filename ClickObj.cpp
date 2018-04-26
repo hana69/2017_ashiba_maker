@@ -1,5 +1,7 @@
 #include"ClickObj.h"
 #include<stdlib.h>
+#include"DxLib.h"
+#include"mouse.h"
 ClickObj::ClickObj(int _x1,int _y1,int _x2 , int _y2 ,int _graph[]) 
 	:x1(_x1),y1(_y1),x2(_x2),y2(_y2),
 	nowState(MOUSE_STATE::NOT_SELECTING),

@@ -1,14 +1,13 @@
 #pragma once
 
-#include"Dxlib.h"
-#include "General.h"
-
 class CMouse{
 public:
 	CMouse();
 	CMouse(int _x1, int _y1, int _x2, int _y2);//コンストラクタで範囲の指定を行う
 
 	void SetRange(int _x1,int _y1,int _x2,int _y2);//範囲の指定
+
+	static void Update();
 
 	bool LeftPushed();
 	bool RightPushed();
@@ -32,7 +31,10 @@ public:
 
 	int Wheel(int rate=1);//奥がマイナス手前がプラス
 private:
-
+	static bool nowLeftPushing;
+	static bool nowRightPushing;
+	static bool lastLeftPushing;
+	static bool lastRightPushing;
 	int x,y;
 
 	int tempX,tempY;
