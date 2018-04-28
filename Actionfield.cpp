@@ -25,7 +25,6 @@ CActionField::CActionField(int _stageNum)
 	pauseFuncs[(unsigned)Pause::Texts::RETURN_TO_TITLE] = &CActionField::ReturnToTitle;
 	pauseFuncs[(unsigned)Pause::Texts::RESUME] = &CActionField::Resume;
 
-
 	//////ƒ}ƒbƒv“Ç‚Ýž‚Ý///////////////
 	if (limitdata[_stageNum] == 0) {
 		std::string s = "noseResource/limitdata"; 
@@ -100,7 +99,6 @@ CActionField::~CActionField() {
 
 void CActionField::Update(int _scroll){
 	coinGotFlag = false;
-	static CMouse mouse(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25);
 	if ( !me->GameOver() && !me->GameClear() ){
 		if (!menuOpening) {
 			me->SetV();
@@ -112,20 +110,10 @@ void CActionField::Update(int _scroll){
 		Draw(_scroll);
 		DrawBox(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25, ORANGE, true);
 		DrawBox(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25, WHITE, false);
-		if (mouse.Insided()) {
-			static int menuGraph = LoadGraph("noseResource/menuBottunPoint.png");
-			DrawGraph(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, menuGraph, true);
-			if (mouse.LeftPushed()) {
-				menuOpening = true;
-			}
-		}
-		else {
-			static int menuGraph = LoadGraph("noseResource/menuBottun.png");
-			DrawGraph(WINDOW_WIDTH - (20 * 2 + 50) + 10, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, menuGraph, true);
-		}
-		if (menuOpening) {
+		MenuButtonUpdate();
+		if ( menuOpening ) {
 			pauseMenu->Update();
-			if (pauseMenu->Selected()) {
+			if ( pauseMenu->Selected() ) {
 				(this->*pauseFuncs[(unsigned)pauseMenu->SelectedText()])();
 			}
 		}
@@ -189,6 +177,22 @@ void CActionField::Restart() {
 
 bool CActionField::GameOvered() { return me->GameOver(); };
 bool CActionField::GameCleared() { return me->GameClear(); };
+
+void CActionField::MenuButtonUpdate() {
+	static CMouse mouse(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25);
+	if (mouse.Insided()) {
+		static int menuGraph = LoadGraph("noseResource/menuBottunPoint.png");
+		DrawGraph(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, menuGraph, true);
+		if (mouse.LeftPushed()) {
+			menuOpening = true;
+		}
+	}
+	else {
+		static int menuGraph = LoadGraph("noseResource/menuBottun.png");
+		DrawGraph(WINDOW_WIDTH - (20 * 2 + 50) + 10, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, menuGraph, true);
+	}
+
+}
 
 void CActionField::Collision() {
 	if (me->X() % 50 == 0) {

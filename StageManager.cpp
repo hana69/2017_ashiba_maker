@@ -14,6 +14,7 @@ void StageManager::UpDate() {
 	static StageSelector stageSelector;
 	static Stage* stage=NULL;
 	if (stageSelecting) {
+		stageSelector.Update();
 		if (stageSelector.SelectFinished()) {
 			stage = new Stage(stageSelector.SelectedStage());
 			stageSelecting = false;

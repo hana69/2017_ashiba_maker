@@ -15,6 +15,7 @@ static int PlusMinus(int _x) {
 	}
 };
 ///////////////////////////////////////////////
+
 class CScaffoldSelector {
 public:
 	CScaffoldSelector(int _x1, int _y1, int _x2, int _y2);
@@ -45,23 +46,23 @@ private:
 	}selectableObj[4];
 };
 
-class CScaffoldDrawer {
+class CScaffoldMaker {
 public:
-	CScaffoldDrawer();
+	CScaffoldMaker();
 	void Update();
 	void OnlyDraw();
 	void AddCoin();
 
 	void Reset();
 
-	bool DrawFinished() ;
+	bool DrawFinished();
 	ScaffoldType DrawnType() { return drawnType; };
 	int DrawnSpotX() { return drawnSpotX; };
 	int DrawnSpotY() { return drawnSpotY; };
 	//NecessaryInfoToMake DrawnScaffold() { return writingObj; };
 private:
 	void Draw();
-		void SetInfo();
+	void SetInfo();
 	NecessaryInfoToMake writingObj;
 
 	ScaffoldType drawnType;
@@ -69,9 +70,9 @@ private:
 		drawnSpotY;
 
 	CScaffoldSelector selector;
-	
+
 	const int x1, x2, y1, y2;
-	
+
 	bool writing;
 	bool drawFinished;
 
@@ -83,3 +84,4 @@ private:
 
 	CMouse Mouse;
 };
+

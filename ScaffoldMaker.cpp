@@ -1,7 +1,7 @@
-#include"ScaffoldDrawer.h"
+#include"ScaffoldMaker.h"
 #include<math.h>
 
-CScaffoldDrawer::CScaffoldDrawer()
+CScaffoldMaker::CScaffoldMaker()
 	:selector(WINDOW_WIDTH - (20 * 2 + 50), WINDOW_HEIGHT - (50 * 4 + 20 * 5), WINDOW_WIDTH, WINDOW_HEIGHT),
 	x1(DRAW_AREA_LEFT), y1(DRAW_AREA_TOP), x2(DRAW_AREA_RIGHT), y2(DRAW_AREA_TOP + 50 * 3 + 1),
 	writing(false), drawFinished(false),
@@ -11,25 +11,25 @@ CScaffoldDrawer::CScaffoldDrawer()
 {}
 /////////////publicä÷êî//////////////////////
 
-void CScaffoldDrawer::Update() {
+void CScaffoldMaker::Update() {
 	Draw();
 	selector.Update(point,needPoint);
 }
 
-void CScaffoldDrawer::OnlyDraw() {
+void CScaffoldMaker::OnlyDraw() {
 	DrawBox(x1, y1, x2, y2, PURPLE, false);
 	selector.Update(point, needPoint);
 }
 
-void CScaffoldDrawer::AddCoin() {
+void CScaffoldMaker::AddCoin() {
 	point+=5;
 }
 
-void CScaffoldDrawer::Reset() {
+void CScaffoldMaker::Reset() {
 	point = 0;
 }
 
-bool CScaffoldDrawer::DrawFinished() {
+bool CScaffoldMaker::DrawFinished() {
 	if (drawFinished) {
 		if (writed) {
 			point -= needPoint;
@@ -46,7 +46,7 @@ bool CScaffoldDrawer::DrawFinished() {
 
 ////////////privateä÷êî//////////////////////
 
-void CScaffoldDrawer::Draw() {
+void CScaffoldMaker::Draw() {
 	DrawBox(x1 , y1 , x2 , y2 , PURPLE , false);
 	
 	if (writing) {
@@ -115,7 +115,7 @@ void CScaffoldDrawer::Draw() {
 	
 }
 	
-	void CScaffoldDrawer::SetInfo() {
+	void CScaffoldMaker::SetInfo() {
 		
 
 		//writingObj.type = selector.SelectingType();

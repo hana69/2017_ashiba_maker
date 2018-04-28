@@ -1,6 +1,6 @@
 #pragma once
 
-#include"ScaffoldDrawer.h"
+#include"ScaffoldMaker.h"
 #include"ActionField.h"
 #include"Tutorial.h"
 
@@ -21,7 +21,7 @@ public:
 	bool OperatedReturnTitle() { return returnTitleFlag; };
 private:
 	CActionField* field;
-	CScaffoldDrawer scaffoldDrawer;
+	CScaffoldMaker scaffoldDrawer;
 	int stageNum;
 
 	CTutorial* tutorial;

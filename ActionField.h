@@ -29,6 +29,7 @@ public:
 	int RightEdge() { return width; };
 	int MeX();
 private:
+	void MenuButtonUpdate();
 	void Draw(int _scroll);
 	void Collision();
 	

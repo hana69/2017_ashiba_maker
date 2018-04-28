@@ -4,12 +4,13 @@
 class StageSelector {
 public:
 	StageSelector();
+	void Update();
 	bool SelectFinished();
 	int SelectedStage() {
 		return selectingStageNum;
 	};
 private:
-	static CMouse mouse;
+	CMouse mouse;
 	void SelectStageByMouse();
 	int selectingStageNum;
 	int nowSelectableStageNumMax;

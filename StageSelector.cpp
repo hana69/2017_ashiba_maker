@@ -2,15 +2,13 @@
 #include"StageSelector.h"
 #include"General.h"
 
-CMouse StageSelector::mouse;
 StageSelector::StageSelector()
 	:selectingStageNum(TUTORIAL), nowSelectableStageNumMax(FINALSTAGE_NUM)
 {
 	SetFontSize(68);
 	ChangeFontType(DX_FONTTYPE_ANTIALIASING_4X4);
 }
-
-bool StageSelector::SelectFinished() {
+void StageSelector::Update() {
 	SelectStageByMouse();
 	static int explainGraph = LoadGraph("noseResource/title_explain.png");
 	DrawGraph(0, 0, explainGraph, true);
@@ -27,6 +25,9 @@ bool StageSelector::SelectFinished() {
 		static int tutorial_graph = LoadGraph("noseResource/tutorial_string.png");
 		DrawGraph(WINDOW_WIDTH / 2 - 215, 580, tutorial_graph, true);
 	}
+}
+
+bool StageSelector::SelectFinished() {
 	return mouse.LeftReleased();
 }
 

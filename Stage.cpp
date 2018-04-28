@@ -1,7 +1,7 @@
 #include"Stage.h"
 #include"General.h"
 #include"ActionField.h"
-#include"ScaffoldDrawer.h"
+#include"ScaffoldMaker.h"
 
 Stage::Stage(int _stageNum)
 	:stageNum(_stageNum),scroll(0)
@@ -11,23 +11,31 @@ Stage::Stage(int _stageNum)
 
 void Stage::Update() {
 	static CActionField field(stageNum);
-	static CScaffoldDrawer drawer;
+	static CScaffoldMaker maker;
 	
 	DrawBack(field.RightEdge());
 	if (stageNum == TUTORIAL) {
 
 	}
 	else {
-		drawer.Update();
+		if (!field.MenuOpening()) {
+			maker.Update();
+		}
+		else {
+			maker.OnlyDraw();
+		}
 		field.Update(scroll);
 		if (field.MeGotCoin()) {
-			drawer.AddCoin();
+			maker.AddCoin();
 		}
-		if (drawer.DrawFinished()) {
-			field.Make(drawer.DrawnSpotX(),drawer.DrawnSpotY(),drawer.DrawnType(), scroll);
+		if (!field.MenuOpening()) {
+			Scroll();
+			if (maker.DrawFinished()) {
+				field.Make(maker.DrawnSpotX(), maker.DrawnSpotY(), maker.DrawnType(), scroll);
+			}
 		}
 	}
-	Scroll();
+	
 }
 
 ///////////////privateä÷êî////////////////////////
