@@ -28,9 +28,9 @@ void StageManager::UpDate() {
 		else {
 			stage->Update();
 			if (stage->SelectedReturnTitle()) {
-				delete stage;
-				stageSelecting = true;
 				stageSelector = new StageSelector();
+				stageSelecting = true;
+				delete stage;
 			}
 		}
 	}

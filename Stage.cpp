@@ -62,8 +62,19 @@ void Stage::Scroll() {
 		scroll -= 50;
 		a = 0;
 	}
+
+	if (mouse.X()<0) {
+		a -= 8;
+	}
+	if (mouse.X()>WINDOW_WIDTH) {
+		a += 8;
+	}
+
 	if (scroll<0) {
 		scroll = 0;
+	}
+	if (scroll>field->RightEdge()*50-WINDOW_WIDTH) {
+		scroll = field->RightEdge()*50- WINDOW_WIDTH;
 	}
 }
 

@@ -9,7 +9,10 @@ public:
 	void Move();
 	void ResetV();
 
-	void ResetHit() { hitUnderSide = false; };
+	void ResetHit() { 
+		hitUnderSide = false;
+		hitOverSide = false;
+	};
 
 	void Restart();
 

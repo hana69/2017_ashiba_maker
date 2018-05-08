@@ -61,6 +61,7 @@ CActionField::CActionField(int _stageNum)
 				sc[i].push_back(new CScaffold(ScaffoldType::GOAL, i, j));
 				firstSc[i][j] = new CScaffold(ScaffoldType::GOAL, i, j);
 				firstPut[i][j] = true;
+				width = i+5;
 			}
 			else if (r == 255 && g == 0 && b == 0) {
 				sc[i].push_back(new CScaffold(ScaffoldType::JUMP, i, j));

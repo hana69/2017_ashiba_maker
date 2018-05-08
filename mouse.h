@@ -37,7 +37,7 @@ private:
 	static bool nowRightPushing;
 	static bool lastLeftPushing;
 	static bool lastRightPushing;
-	int x,y;
+	static int x,y;
 
 	int tempX,tempY;
 

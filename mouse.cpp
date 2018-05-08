@@ -3,12 +3,12 @@
 
 
 CMouse::CMouse()
-:x(0),y(0),
-tempX(0),tempY(0)
+:tempX(0),tempY(0)
 {
 	SetRange(0,0,0,0);
 }
-
+int CMouse::x = 0;
+int CMouse::y = 0;
 bool CMouse::nowLeftPushing = false;
 bool CMouse::nowRightPushing = false;
 bool CMouse::lastLeftPushing = false;
@@ -21,6 +21,7 @@ CMouse::CMouse(int _x1, int _y1, int _x2, int _y2)
 }
 
 void CMouse::Update() {
+	GetMousePoint(&x, &y);
 	lastLeftPushing = nowLeftPushing;
 	lastRightPushing = nowRightPushing;
 	
