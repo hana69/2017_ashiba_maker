@@ -205,7 +205,9 @@ void CScaffoldSelector::CSelectableObj::SetPosition(int _x,int _y) {
 }
 
 void CScaffoldSelector::CSelectableObj::Select(ScaffoldType* _selectingType,int _point ) {
-	if (Mouse.Insided() && Mouse.LeftPushed()) {
-		*_selectingType = type;
+	if (Mouse.Insided()) {
+		if (Mouse.LeftPushed()) {
+			*_selectingType = type;
+		}
 	}
 }

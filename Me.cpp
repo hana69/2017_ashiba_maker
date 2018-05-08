@@ -60,13 +60,13 @@ bool CMe::CollidedWith(CScaffold* _sc) {
 			if (x + 50 <= _sc->X() * 50 && x + vx + 50 >= _sc->X() * 50) {
 				vx = 0;
 				x = _sc->X() * 50 - 50;
-				HitEffect(_sc->Type(), _sc->X(), _sc->Y());
 				return true;
 			}
 		}
 
 		if (_sc->X() * 50 < x + 50 && _sc->X() * 50 + 50 > x) {
 			if (_sc->Y() * 50 < y + 50 + vy && _sc->Y() * 50 + 50 > y + vy) {
+				vy = 0;
 				if (y > _sc->Y() * 50) {//‘«ê‚Ì‰º‘¤iŽ©‹@‚Ìã‘¤j‚É“–‚½‚Á‚½
 					hitUnderSide = true;
 					diedScUpY = _sc->Y() * 50 + 50;
@@ -78,7 +78,7 @@ bool CMe::CollidedWith(CScaffold* _sc) {
 					y = _sc->Y() * 50 - 50;
 					HitEffect(_sc->Type(), _sc->X(), _sc->Y());
 				}
-				vy = 0;
+				
 				if (hitUnderSide && hitOverSide) {
 					if (!gameOver) {
 						pressedDie = true;

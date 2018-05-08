@@ -44,7 +44,7 @@ bool CMouse::RightPushed() {
 
 }
 bool CMouse::LeftPushed() {
-	if (!lastLeftPushing && nowRightPushing) {
+	if (!lastLeftPushing && nowLeftPushing) {
 		return true;
 	}
 
