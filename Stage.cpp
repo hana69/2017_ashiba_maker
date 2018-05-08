@@ -4,38 +4,49 @@
 #include"ScaffoldMaker.h"
 
 Stage::Stage(int _stageNum)
-	:stageNum(_stageNum),scroll(0)
+	:scroll(0),
+	field(new CActionField(_stageNum)),maker(new CScaffoldMaker())
 {
 	SetFontSize(15);
 }
 
+Stage::~Stage() {
+	delete field;
+	delete maker;
+}
+
 void Stage::Update() {
-	static CActionField field(stageNum);
-	static CScaffoldMaker maker;
-	
-	DrawBack(field.RightEdge());
-	if (stageNum == TUTORIAL) {
+	DrawBack(field->RightEdge());
+	if (field->IsTutorial()) {
 
 	}
 	else {
-		if (!field.MenuOpening()) {
-			maker.Update();
+		if (!field->MenuOpening()) {
+			maker->Update();
 		}
 		else {
-			maker.OnlyDraw();
+			maker->OnlyDraw();
+			if (field->SelectedReturnStart()) {
+				scroll = 0;
+				field->Restart();
+			}
 		}
-		field.Update(scroll);
-		if (field.MeGotCoin()) {
-			maker.AddCoin();
+		field->Update(scroll);
+		if (field->MeGotCoin()) {
+			maker->AddCoin();
 		}
-		if (!field.MenuOpening()) {
+		if (!field->MenuOpening()) {
 			Scroll();
-			if (maker.DrawFinished()) {
-				field.Make(maker.DrawnSpotX(), maker.DrawnSpotY(), maker.DrawnType(), scroll);
+			if (maker->DrawFinished()) {
+				field->Make(maker->DrawnSpotX(), maker->DrawnSpotY(), maker->DrawnType(), scroll);
 			}
 		}
 	}
 	
+}
+
+bool Stage::SelectedReturnTitle() {
+	return field->SelectedReturnTitle();
 }
 
 ///////////////privateŠÖ”////////////////////////

@@ -16,9 +16,14 @@ public:
 	void Make( int _x , int _y , ScaffoldType _type , int _scroll );
 	void Restart();
 
+	bool IsTutorial() { return isTutorial; };
+
 	bool MeGotCoin() { return coinGotFlag; };
 	bool MenuOpening(){ return menuOpening; };
 
+	bool SelectedReturnStart() { return returnStartFlag; };
+	bool SelectedReturnTitle() { return returnTitleFlag; };
+	
 	bool GameOvered();
 	bool GameCleared();
 
@@ -31,9 +36,10 @@ public:
 private:
 	void MenuButtonUpdate();
 	void Draw(int _scroll);
-	void Collision();
-	
 		void DrawLimit(int _scroll);
+	void Collision();
+		void EraserCollision();
+		
 	void Move();
 
 	CScaffold* firstSc[500][15];
@@ -44,8 +50,11 @@ private:
 	
 	int width;
 	int height;
+
+	bool isTutorial;
 	
 	bool returnTitleFlag;
+	bool returnStartFlag;
 	bool coinGotFlag;
 	bool menuOpening;
 

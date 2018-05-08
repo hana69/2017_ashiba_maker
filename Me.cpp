@@ -55,38 +55,39 @@ void CMe::Draw(int _scroll){
 }
 
 bool CMe::CollidedWith(CScaffold* _sc) {
-	if (_sc->Y() * 50 < y + 50 && _sc->Y() * 50 + 50 > y) {
-		if (x+50 <= _sc->X() * 50 && x + vx+50 >= _sc->X() * 50) {
-			vx = 0;
-			x = _sc->X() * 50-50;
-			return true;
-		}
-	}
-
-	if ( _sc -> X() * 50 < x + 50 && _sc -> X() * 50 + 50 > x ) {
-		if (_sc->Y() * 50 < y + 50 + vy && _sc->Y() * 50 + 50 > y + vy) {
-			if (y > _sc->Y() * 50) {
-				hitUnderSide = true;//足場の下側（自機の上側）に当たったのを記録
-				diedScUpY = _sc->Y() * 50 + 50;
-				y = _sc->Y() * 50 + 50;
-				vy = 0;
+	if (_sc->Type()!=ScaffoldType::ERASER) {
+		if (_sc->Y() * 50 < y + 50 && _sc->Y() * 50 + 50 > y) {
+			if (x + 50 <= _sc->X() * 50 && x + vx + 50 >= _sc->X() * 50) {
+				vx = 0;
+				x = _sc->X() * 50 - 50;
+				HitEffect(_sc->Type(), _sc->X(), _sc->Y());
+				return true;
 			}
-			else {//足場の上側（自機の下側）に当たった
-				if (hitUnderSide) {//すでに足場の下側（自機の上側）に当たっていた
+		}
+
+		if (_sc->X() * 50 < x + 50 && _sc->X() * 50 + 50 > x) {
+			if (_sc->Y() * 50 < y + 50 + vy && _sc->Y() * 50 + 50 > y + vy) {
+				if (y > _sc->Y() * 50) {//足場の下側（自機の上側）に当たった
+					hitUnderSide = true;
+					diedScUpY = _sc->Y() * 50 + 50;
+					y = _sc->Y() * 50 + 50;
+				}
+				else {//足場の上側（自機の下側）に当たった
+					hitOverSide = true;
+					diedScDownY = _sc->Y() * 50;
+					y = _sc->Y() * 50 - 50;
+					HitEffect(_sc->Type(), _sc->X(), _sc->Y());
+				}
+				vy = 0;
+				if (hitUnderSide && hitOverSide) {
 					if (!gameOver) {
 						pressedDie = true;
 						gameOver = true;
-						diedScDownY = _sc->Y() * 50;
 						vy = 0;
 					}
 				}
-				else {
-					y = _sc->Y() * 50 - 50;
-					vy = 0;
-					HitEffect(_sc->Type(), _sc->X(), _sc->Y());
-				}
+				return true;
 			}
-			return true;
 		}
 	}
 	

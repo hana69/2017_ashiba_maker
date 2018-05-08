@@ -9,7 +9,8 @@ int CActionField::limitdata[10] = {};
 int CActionField::mapdata[10] = {};
 CActionField::CActionField(int _stageNum) 
 	:width(200),height( (WINDOW_HEIGHT-280) / 50 ),
-	 returnTitleFlag(false),menuOpening(false),
+	isTutorial(_stageNum==0),
+	returnStartFlag(false),returnTitleFlag(false),menuOpening(false),
 	coinGotFlag(false),
 	coin(new CCoin(width)),me(new CMe()),pauseMenu(new Pause())
 {
@@ -172,6 +173,7 @@ void CActionField::Restart() {
 	}
 	menuOpening = false;
 	coin->Reset();
+	returnStartFlag = false;
 	returnTitleFlag = false;
 }
 
@@ -195,7 +197,7 @@ void CActionField::MenuButtonUpdate() {
 }
 
 void CActionField::Collision() {
-	if (me->X() % 50 == 0) {
+	if (me->X() % 50 == 0) {//‚¿‚å‚¤‚Ç‹«–Ú‚É‚¢‚é‚Æ‚«
 		for (int j = 0; j < 15;j++) {
 			for (int i = 0; i < 2; i++) {
 				if ( j < sc[me->X() / 50 + i].size()) {
@@ -210,14 +212,11 @@ void CActionField::Collision() {
 		}	
 	}
 	else {
-		for (int j = 0; j < 15; j++) {
-			for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 15 && !me->GameOver(); j++) {
+			for (int i = 0; i < 3 && !me->GameOver(); i++) {
 				if (j < sc[me->X() / 50 + i].size()) {
 					if (me->CollidedWith(sc[me->X() / 50 + i][j])) {
 						//sc[me->X() / 50 + i][0]->HitEffect();
-						if (me->GameOver()) {
-							break;
-						}
 					}
 				}
 			}
@@ -232,7 +231,36 @@ void CActionField::Collision() {
 			}
 		}
 	}
+
+	EraserCollision();
 }
+	void CActionField:: EraserCollision() {
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < sc[i].size(); j++) {
+				if (sc[i][j]->Type() == ScaffoldType::ERASER) {
+					if (j != 0) {//ã‘¤‚Ì‚â‚Â‚ðÁ‚·ˆ—
+						if (sc[i][j - 1]->Y() * 50 + 50 > sc[i][j]->Y() * 50) {
+							delete sc[i][j - 1];
+							for (int k = j - 1; k < sc[i].size() - 1; k++) {
+								sc[i][k] = sc[i][k + 1];
+							}
+							sc[i].pop_back();
+						}
+					}
+					else {
+						if (sc[i][0]->Y() * 50 + 50<0) {//‰æ–Êã‘¤‚Ü‚Å‚¢‚Á‚½‚çÁ‚·
+							delete sc[i][0];
+							for (int k = 0; k < sc[i].size() - 1; k++) {
+								sc[i][k] = sc[i][k + 1];
+							}
+							sc[i].pop_back();
+						}
+					}
+				}
+			}
+		}
+	}
+
 void CActionField::Draw(int _scroll) {
 	DrawLimit(_scroll);
 	me->Draw(_scroll);
@@ -261,7 +289,7 @@ void CActionField::Move() {
 				sc[i][j]->Move(limit[i]);
 			}
 			else {
-				sc[i][j]->Move(sc[i][j - 1]->Y() + 1);
+				sc[i][j]->Move(max(limit[i],sc[i][j - 1]->Y() + 1));
 			}
 		}
 	}
@@ -275,7 +303,7 @@ void CActionField::ReturnToTitle() {
 	returnTitleFlag = true;
 }
 void CActionField::ReturnToStart() {
-	Restart();
+	returnStartFlag = true;
 }
 void CActionField::Resume() {
 	menuOpening = false;

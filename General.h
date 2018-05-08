@@ -55,6 +55,7 @@ enum class ScaffoldType {
 	SPEED_UP,
 	NORMAL,
 	GOAL,
+	ERASER,
 	ALLNUM
 };
 

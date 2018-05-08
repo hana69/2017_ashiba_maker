@@ -4,7 +4,7 @@
 CScaffoldMaker::CScaffoldMaker()
 	:selector(WINDOW_WIDTH - (20 * 2 + 50), WINDOW_HEIGHT - (50 * 4 + 20 * 5), WINDOW_WIDTH, WINDOW_HEIGHT),
 	x1(DRAW_AREA_LEFT), y1(DRAW_AREA_TOP), x2(DRAW_AREA_RIGHT), y2(DRAW_AREA_TOP + 50 * 3 + 1),
-	writing(false), drawFinished(false),
+	drawFinished(false),
 	writingWidth(0),writed(false),
 	point(0),needPoint(0),
 	Mouse(x1, y1, x2, y2)
@@ -48,11 +48,9 @@ bool CScaffoldMaker::DrawFinished() {
 
 void CScaffoldMaker::Draw() {
 	DrawBox(x1 , y1 , x2 , y2 , PURPLE , false);
-	
-	if (writing) {
-		/*const int tX = Mouse.TempX(), X = Mouse.X(), cX = Mouse.ChangeX(),
+	/*const int tX = Mouse.TempX(), X = Mouse.X(), cX = Mouse.ChangeX(),
 				  tY = Mouse.TempY(), Y = Mouse.Y(), cY = Mouse.ChangeY();*/
-		/*if (cX > 0 && cY > 0) {
+	/*if (cX > 0 && cY > 0) {
 			for (int i = tX / 50 + tX % 50 / 25; i <= X / 50 + X % 50 / 25 - 1 && point >= needPoint+ scaffoldCost[(unsigned)selector.SelectingType()] && x1 < i * 50 && i * 50 < x2;i++) {
 				needPoint += scaffoldCost[(unsigned)selector.SelectingType()];
 				writingWidth++;
@@ -92,27 +90,27 @@ void CScaffoldMaker::Draw() {
 				}
 			}
 		}*/
-		DrawGraph( Mouse.X() / 50 * 50, Mouse.Y() / 50 * 50 , scaffoldGraph(selector.SelectingType()) , true);
-	}
-	/*if (!writed) {
-		needPoint = 0;
-	}*/
-	
-	if (Mouse.LeftReleased() && writing) {
-		writing = false;
-		drawFinished = true;
-		drawnType = selector.SelectingType();
-		drawnSpotX = Mouse.X();
-		drawnSpotY = Mouse.Y();
-	}
-//	writingWidth = 0;
 	if (Mouse.Insided()) {
-		if (Mouse.LeftPushed() && !writing) {
-			writing = true;
-			Mouse.SetTemp();
+		if (Mouse.LeftReleased()) {
+			drawFinished = true;
+			drawnType = selector.SelectingType();
+			drawnSpotX = Mouse.X();
+			drawnSpotY = Mouse.Y();
+		}
+		else if(Mouse.RightReleased()){
+			drawFinished = true;
+			drawnType = ScaffoldType::ERASER;
+			drawnSpotX = Mouse.X();
+			drawnSpotY = Mouse.Y();
+		}
+
+		if (Mouse.LeftPushing()) {
+			DrawGraph(Mouse.X() / 50 * 50, Mouse.Y() / 50 * 50, scaffoldGraph(selector.SelectingType()), true);
+		}
+		else if (Mouse.RightPushing()) {
+			DrawGraph(Mouse.X() / 50 * 50, Mouse.Y() / 50 * 50, scaffoldGraph(ScaffoldType::ERASER), true);
 		}
 	}
-	
 }
 	
 	void CScaffoldMaker::SetInfo() {

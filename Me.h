@@ -25,6 +25,8 @@ private:
 	void HitEffect(ScaffoldType,int _x,int _y);
 
 	bool hitUnderSide;
+	bool hitOverSide;
+
 	int diedScUpY;
 	int diedScDownY;
 	bool pressedDie;

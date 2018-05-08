@@ -27,6 +27,8 @@ public:
 	int ChangeY();//SetTempで設定した座標からの変位のＹ成分を返す
 		
 	bool LeftPushing();
+	bool RightPushing();
+
 	bool Insided();
 
 	int Wheel(int rate=1);//奥がマイナス手前がプラス

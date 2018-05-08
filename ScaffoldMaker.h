@@ -73,7 +73,6 @@ private:
 
 	const int x1, x2, y1, y2;
 
-	bool writing;
 	bool drawFinished;
 
 	int writingWidth;

@@ -1,12 +1,17 @@
 #pragma once
+class CActionField;
+class CScaffoldMaker;
 
-class Stage {
+class Stage{
 public:
 	Stage(int _stageNum);
+	~Stage();
 	void Update();
+	bool SelectedReturnTitle();
 private:
 	void Scroll();
 	void DrawBack(int rightEdge);
-	const int stageNum;
 	int scroll;
+	CActionField *field;
+	CScaffoldMaker *maker;
 };

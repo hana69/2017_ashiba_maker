@@ -18,7 +18,7 @@ void CScaffold::Draw(int _scroll) {
 
 void CScaffold::Move(int _limit) {
 	y -= 0.2;
-	if (y < _limit) {
+	if (y < _limit && type!=ScaffoldType::ERASER) {
 		y = _limit;
 	}
 }
