@@ -11,13 +11,14 @@ StageManager::StageManager()
 {}
 
 void StageManager::UpDate() {
-	static StageSelector stageSelector;
+	static StageSelector* stageSelector=new StageSelector();
 	static Stage* stage=NULL;
 	if (stageSelecting) {
-		stageSelector.Update();
-		if (stageSelector.SelectFinished()) {
-			stage = new Stage(stageSelector.SelectedStage());
+		stageSelector->Update();
+		if (stageSelector->SelectFinished()) {
+			stage = new Stage(stageSelector->SelectedStage());
 			stageSelecting = false;
+			delete stageSelector;
 		}
 	}
 	else{
@@ -26,6 +27,11 @@ void StageManager::UpDate() {
 		}
 		else {
 			stage->Update();
+			if (stage->SelectedReturnTitle()) {
+				delete stage;
+				stageSelecting = true;
+				stageSelector = new StageSelector();
+			}
 		}
 	}
 }

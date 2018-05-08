@@ -89,8 +89,10 @@ CActionField::~CActionField() {
 		}
 	}
 	for (int i = 0; i < width;i++) {
-		for (auto j : firstSc[i]) {
-			delete j;
+		for (int j = 0; j < 15;j++) {
+			if (firstPut[i][j]) {
+				delete firstSc[i][j];
+			}
 		}
 	}
 	delete me;
