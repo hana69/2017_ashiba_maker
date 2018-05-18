@@ -16,13 +16,16 @@ static int PlusMinus(int _x) {
 };
 ///////////////////////////////////////////////
 
+class MPGage;
+
 class CScaffoldSelector {
 public:
 	CScaffoldSelector(int _x1, int _y1, int _x2, int _y2);
 	void Update(int _point,int _needPoint);
 	ScaffoldType SelectingType() { return selectingType; };
-
+	
 private:
+	
 	void Draw(int _point,int _needPoint);
 
 	int x1, y1, x2, y2;
@@ -49,6 +52,7 @@ private:
 class CScaffoldMaker {
 public:
 	CScaffoldMaker();
+	~CScaffoldMaker();
 	void Update();
 	void OnlyDraw();
 	void AddCoin();
@@ -62,16 +66,15 @@ public:
 	//NecessaryInfoToMake DrawnScaffold() { return writingObj; };
 private:
 	void Draw();
-	void SetInfo();
-	NecessaryInfoToMake writingObj;
-
 	ScaffoldType drawnType;
 	int drawnSpotX,
 		drawnSpotY;
 
 	CScaffoldSelector selector;
+	MPGage* mpGage;
 
 	const int x1, x2, y1, y2;
+	const int drawAreaGraph;
 
 	bool drawFinished;
 

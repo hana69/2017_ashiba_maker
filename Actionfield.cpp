@@ -4,15 +4,17 @@
 #include"coin.h"
 #include"Me.h"
 #include"Menu.h"
+#include"SaveData.h"
 
 int CActionField::limitdata[10] = {};
 int CActionField::mapdata[10] = {};
 CActionField::CActionField(int _stageNum) 
 	:width(200),height( (WINDOW_HEIGHT-280) / 50 ),
-	isTutorial(_stageNum==0),
+	isTutorial(_stageNum==0),underSea(_stageNum>8),
 	returnStartFlag(false),returnTitleFlag(false),menuOpening(false),
-	coinGotFlag(false),
-	coin(new CCoin(width)),me(new CMe()),pauseMenu(new Pause())
+	coinGotFlag(false),goToNextStageFlag(false),
+	coin(new CCoin(width)),me(new CMe(_stageNum)),
+	pauseMenu(new Pause()),gameOverMenu(new GameOverMenu()),gameClearMenu(new GameClearMenu(_stageNum))
 {
 	//配列の初期化
 	for (int i = 0; i < 500; i++) {
@@ -25,6 +27,12 @@ CActionField::CActionField(int _stageNum)
 	pauseFuncs[(unsigned)Pause::Texts::RETURN_TO_START] = &CActionField::ReturnToStart;
 	pauseFuncs[(unsigned)Pause::Texts::RETURN_TO_TITLE] = &CActionField::ReturnToTitle;
 	pauseFuncs[(unsigned)Pause::Texts::RESUME] = &CActionField::Resume;
+	
+	gameClearFuncs[(unsigned)GameClearMenu::Texts::RETURN_TO_TITLE] = &CActionField::ReturnToTitle;
+	gameClearFuncs[(unsigned)GameClearMenu::Texts::GO_TO_NEXT_STAGE] = &CActionField::GoToNextStage;
+
+	gameOverFuncs[(unsigned)GameOverMenu::Texts::RETURN_TO_START] = &CActionField::ReturnToStart;
+	gameOverFuncs[(unsigned)GameOverMenu::Texts::RETURN_TO_TITLE] = &CActionField::ReturnToTitle;
 
 	//////マップ読み込み///////////////
 	if (limitdata[_stageNum] == 0) {
@@ -39,7 +47,7 @@ CActionField::CActionField(int _stageNum)
 		s += ".png";
 		mapdata[_stageNum] = LoadSoftImage(s.c_str());
 	}
-	//////////////////////////////////////
+	////////////
 
 	int r, g, b, a;
 	for (int i = 0; i < width;i++) {
@@ -99,21 +107,37 @@ CActionField::~CActionField() {
 	delete me;
 	delete coin;
 	delete pauseMenu;
+	delete gameOverMenu;
+	delete gameClearMenu;
 }
 
 void CActionField::Update(int _scroll){
 	coinGotFlag = false;
-	if ( !me->GameOver() && !me->GameClear() ){
+	if (me->GameClear()) {
+		Draw(_scroll);
+		gameClearMenu->Update();
+		if (gameClearMenu->Selected()) {
+			(this->*gameClearFuncs[(unsigned)gameClearMenu->SelectedText()])();
+		}
+	}else if (me->GameOver()) {
+		Draw(_scroll);
+		me->SetV(underSea);
+		me->Move();
+		me->ResetV();
+		gameOverMenu->Update();
+		if (gameOverMenu->Selected()) {
+			(this->*gameOverFuncs[(unsigned)gameOverMenu->SelectedText()])();
+		}
+	}
+	else{
 		if (!menuOpening) {
-			me->SetV();
+			me->SetV(underSea);
 			Collision();//ここでcoinGotFlagがtrueになるかも
 			Move();
 			me->ResetV();
 			me->ResetHit();
 		}
 		Draw(_scroll);
-		DrawBox(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25, ORANGE, true);
-		DrawBox(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25, WHITE, false);
 		MenuButtonUpdate();
 		if ( menuOpening ) {
 			pauseMenu->Update();
@@ -121,9 +145,6 @@ void CActionField::Update(int _scroll){
 				(this->*pauseFuncs[(unsigned)pauseMenu->SelectedText()])();
 			}
 		}
-	}
-	else {
-		Draw(_scroll);
 	}
 }
 
@@ -140,7 +161,6 @@ void CActionField::OnlyDraw(int _scroll) {
 	coin->Draw(_scroll);
 	static int menuGraph = LoadGraph("noseResource/menuBottun.png");
 	DrawGraph(WINDOW_WIDTH - (20 * 2 + 50) + 10, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, menuGraph, true);
-
 }
 
 void CActionField::Make(int _x,int _y,ScaffoldType _type,int _scroll) {
@@ -156,7 +176,7 @@ void CActionField::Make(int _x,int _y,ScaffoldType _type,int _scroll) {
 			}
 		}
 	}*/
-	if (sc[_x / 50 + (_scroll / 50)].size() <= 9) {
+	if (sc[_x / 50 + (_scroll / 50)].size() <= 9 || _type==ScaffoldType::ERASER) {
 		sc[_x / 50 + (_scroll / 50)].push_back(new CScaffold(_type, _x / 50 + (_scroll / 50), _y / 50));
 	}
 }
@@ -184,6 +204,8 @@ bool CActionField::GameOvered() { return me->GameOver(); };
 bool CActionField::GameCleared() { return me->GameClear(); };
 
 void CActionField::MenuButtonUpdate() {
+	DrawBox(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25, ORANGE, true);
+	DrawBox(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25, WHITE, false);
 	static CMouse mouse(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25);
 	if (mouse.Insided()) {
 		static int menuGraph = LoadGraph("noseResource/menuBottunPoint.png");
@@ -289,10 +311,10 @@ void CActionField::Move() {
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < sc[i].size(); j++) {
 			if (j == 0) {
-				sc[i][j]->Move(limit[i]);
+				sc[i][j]->Move(limit[i],underSea);
 			}
 			else {
-				sc[i][j]->Move(max(limit[i],sc[i][j - 1]->Y() + 1));
+				sc[i][j]->Move(max(limit[i],sc[i][j - 1]->Y() + 1),underSea);
 			}
 		}
 	}
@@ -310,4 +332,7 @@ void CActionField::ReturnToStart() {
 }
 void CActionField::Resume() {
 	menuOpening = false;
+}
+void CActionField::GoToNextStage() {
+	goToNextStageFlag = true;
 }

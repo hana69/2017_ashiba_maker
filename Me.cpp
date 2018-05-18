@@ -1,30 +1,51 @@
 #include "Me.h"
 #include"key.h"
+//#include"SaveData.h"
 
-CMe::CMe() 
+CMe::CMe(int _stageNum) 
 	:x(0),y(0),
 	vx(0),vy(0),
 	gameOver(false),
 	gameClear(false),
 	hitUnderSide(false),
 	pressedDie(false),
+	stageNum(_stageNum),
+	startTime(GetNowCount()),
+	duration(10000),
+	//sd(new SaveData("noseResource/saveData.txt") ),
 	graph(LoadGraph("noseResource/trokko_Draw_5.png"))
 {}
-void CMe::SetV() {
-	vx = 1.5f;
-	vy += 0.2f;
+
+CMe::~CMe(){
+//	delete sd;
 }
 
-void CMe::Move()
-{
-	/*if (vx>=50) {
-		vx = 0;
-		x ++;
-	}*/
-	x += vx;
-	y += vy;
-	if (y>550) {
-		gameOver = true;
+void CMe::SetV(bool underSea) {
+	if (underSea) {
+		vx = 1.0f;
+		vy += 0.1f;
+	}
+	else {
+		vx = 1.5f;
+		vy += 0.2f;
+	}
+}
+
+void CMe::Move(){
+
+	if (gameOver) {
+		if (550 <= y && y <= WINDOW_HEIGHT) {
+			x += vx;
+			y += vy;
+		}
+		
+	}
+	else{
+		if (550 < y) {
+			gameOver = true;
+		}
+		x += vx;
+		y += vy;
 	}
 }
 
@@ -42,6 +63,7 @@ void CMe::Restart() {
 	vy = 0;
 	hitUnderSide = false;
 	pressedDie = false;
+	startTime = GetNowCount();
 }
 
 void CMe::Draw(int _scroll){
@@ -51,7 +73,6 @@ void CMe::Draw(int _scroll){
 	else {
 		DrawGraph( x - _scroll - 4 , y - 4 , graph , true );
 	}
-	//DrawBox(x - _scroll,y,x+50-_scroll,y+50,RED,true);
 }
 
 bool CMe::CollidedWith(CScaffold* _sc) {
@@ -63,7 +84,6 @@ bool CMe::CollidedWith(CScaffold* _sc) {
 				return true;
 			}
 		}
-
 		if (_sc->X() * 50 < x + 50 && _sc->X() * 50 + 50 > x) {
 			if (_sc->Y() * 50 < y + 50 + vy && _sc->Y() * 50 + 50 > y + vy) {
 				vy = 0;
@@ -79,7 +99,7 @@ bool CMe::CollidedWith(CScaffold* _sc) {
 					HitEffect(_sc->Type(), _sc->X(), _sc->Y());
 				}
 				
-				if (hitUnderSide && hitOverSide) {
+				if (hitUnderSide && hitOverSide && diedScDownY-diedScUpY < 50) {
 					if (!gameOver) {
 						pressedDie = true;
 						gameOver = true;
@@ -110,6 +130,10 @@ void CMe::HitEffect(ScaffoldType _type,int _x,int _y) {
 			x = _x*50;
 			gameClear = true;
 			vx = 0;
+			duration = GetNowCount() - startTime;
+		//	if (sd->Data(stageNum) > duration) {
+		//		sd->SetData(stageNum,duration);
+			//}
 		}
 		break;
 	}

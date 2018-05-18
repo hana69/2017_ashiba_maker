@@ -1,9 +1,12 @@
 #include"ScaffoldMaker.h"
 #include<math.h>
+#include"MPGage.h"
 
 CScaffoldMaker::CScaffoldMaker()
-	:selector(WINDOW_WIDTH - (20 * 2 + 50), WINDOW_HEIGHT - (50 * 4 + 20 * 5), WINDOW_WIDTH, WINDOW_HEIGHT),
+	:selector(WINDOW_WIDTH - (60+50), WINDOW_HEIGHT - (50 * 4 + 20 * 5), WINDOW_WIDTH, WINDOW_HEIGHT),
+	mpGage(new MPGage(WINDOW_WIDTH - 35, WINDOW_HEIGHT - 20) ),
 	x1(DRAW_AREA_LEFT), y1(DRAW_AREA_TOP), x2(DRAW_AREA_RIGHT), y2(DRAW_AREA_TOP + 50 * 3 + 1),
+	drawAreaGraph(LoadGraph("noseResource/drawArea.png")),
 	drawFinished(false),
 	writingWidth(0),writed(false),
 	point(0),needPoint(0),
@@ -11,13 +14,19 @@ CScaffoldMaker::CScaffoldMaker()
 {}
 /////////////publicŠÖ”//////////////////////
 
+CScaffoldMaker::~CScaffoldMaker() {
+	delete mpGage;
+}
+
 void CScaffoldMaker::Update() {
 	Draw();
+	OnlyDraw();
 	selector.Update(point,needPoint);
 }
 
 void CScaffoldMaker::OnlyDraw() {
-	DrawBox(x1, y1, x2, y2, PURPLE, false);
+	DrawGraph( x1 ,  y1 , drawAreaGraph , true);
+	mpGage->Update(point, false, selector.SelectingType());
 	selector.Update(point, needPoint);
 }
 
@@ -31,10 +40,6 @@ void CScaffoldMaker::Reset() {
 
 bool CScaffoldMaker::DrawFinished() {
 	if (drawFinished) {
-		if (writed) {
-			point -= needPoint;
-		}
-		needPoint = 0;
 		drawFinished = false;
 		writed = false;
 		return true;
@@ -47,7 +52,6 @@ bool CScaffoldMaker::DrawFinished() {
 ////////////privateŠÖ”//////////////////////
 
 void CScaffoldMaker::Draw() {
-	DrawBox(x1 , y1 , x2 , y2 , PURPLE , false);
 	/*const int tX = Mouse.TempX(), X = Mouse.X(), cX = Mouse.ChangeX(),
 				  tY = Mouse.TempY(), Y = Mouse.Y(), cY = Mouse.ChangeY();*/
 	/*if (cX > 0 && cY > 0) {
@@ -90,21 +94,24 @@ void CScaffoldMaker::Draw() {
 				}
 			}
 		}*/
+	mpGage->Update(point, Mouse.LeftPushing() || Mouse.RightPushing() , selector.SelectingType() );
 	if (Mouse.Insided()) {
-		if (Mouse.LeftReleased()) {
+		if (Mouse.LeftReleased() && scaffoldCost[(unsigned)selector.SelectingType()] <= point) {
 			drawFinished = true;
+			point -= scaffoldCost[(unsigned)selector.SelectingType()];
 			drawnType = selector.SelectingType();
 			drawnSpotX = Mouse.X();
 			drawnSpotY = Mouse.Y();
 		}
 		else if(Mouse.RightReleased()){
 			drawFinished = true;
+			point -= scaffoldCost[(unsigned)ScaffoldType::ERASER];
 			drawnType = ScaffoldType::ERASER;
 			drawnSpotX = Mouse.X();
 			drawnSpotY = Mouse.Y();
 		}
 
-		if (Mouse.LeftPushing()) {
+		if (Mouse.LeftPushing() && scaffoldCost[(unsigned)selector.SelectingType()] <= point) {
 			DrawGraph(Mouse.X() / 50 * 50, Mouse.Y() / 50 * 50, scaffoldGraph(selector.SelectingType()), true);
 		}
 		else if (Mouse.RightPushing()) {
@@ -112,31 +119,7 @@ void CScaffoldMaker::Draw() {
 		}
 	}
 }
-	
-	void CScaffoldMaker::SetInfo() {
-		
-
-		//writingObj.type = selector.SelectingType();
-		/*const int tX = Mouse.TempX(), X = Mouse.X(), cX = Mouse.ChangeX(),
-				  tY = Mouse.TempY(), Y = Mouse.Y(), cY = Mouse.ChangeY();
-		if (cX > 0) {
-			writingObj.x1 = tX/ 50 + tX % 50/ 25;
-			writingObj.x2 = writingObj.x1 + writingWidth-1;
-		}
-		else {
-			writingObj.x2 = tX / 50 + tX % 50 / 25 - 1;
-			writingObj.x1 = writingObj.x2 - writingWidth + 1;
-		}
-		if (Mouse.ChangeY() > 0) {
-			writingObj.y1 = tY / 50 + tY % 50 / 25;
-			writingObj.y2 = Y / 50 + Y % 50 / 25 - 1;
-		}
-		else {
-			writingObj.y1 = Y / 50 + Y % 50 / 25;
-			writingObj.y2 = tY / 50 + tY % 50 / 25 - 1;
-		}*/
-	}
-///////////////////////////CSelectField////////////////////////////////////
+///////////////////////////Selector////////////////////////////////////
 
 int	CScaffoldSelector::selecting = 0;
 int	CScaffoldSelector::pointing = 0;
@@ -165,10 +148,10 @@ void CScaffoldSelector::Update(int _point,int _needPoint) {
 }
 
 void CScaffoldSelector::Draw(int _point, int _needPoint) {
-	DrawBox(x1 -77, y1 - 21, x1 + 58, y1 + 15 , GRAY, true);
+	/*DrawBox(x1 -77, y1 - 21, x1 + 58, y1 + 15 , GRAY, true);
 	DrawBox(x1 -77, y1 - 21, x1 + 58, y1 + 15 , WHITE, false);
 	DrawFormatString(x1 + 15, y1 - 20, YELLOW, "MP:%d", _point);
-	DrawFormatString(x1 - 75, y1 - 3, RED, "‚Â‚­‚Á‚½Œã‚ÌMP:%d", _point - _needPoint);
+	DrawFormatString(x1 - 75, y1 - 3, RED, "‚Â‚­‚Á‚½Œã‚ÌMP:%d", _point - _needPoint);*/
 	
 	for (int i = 0; i <= (unsigned)ScaffoldType::NORMAL; i++) {
 		selectableObj[i].Draw(_point);

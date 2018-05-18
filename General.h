@@ -47,7 +47,7 @@ static bool EscapeProgram(const char* _mes,bool escapeScene=false) {
 
 /////ÉQÅ[ÉÄópíËêî/////
 const int TUTORIAL = 0;
-const int FINALSTAGE_NUM = 8;
+const int FINALSTAGE_NUM = 9;
 
 enum class ScaffoldType {
 	JUMP,
@@ -59,7 +59,7 @@ enum class ScaffoldType {
 	ALLNUM
 };
 
-const int scaffoldCost[(unsigned)ScaffoldType::ALLNUM] = {2,2,2,1};
+const int scaffoldCost[(unsigned)ScaffoldType::ALLNUM] = { 2,2,1,1,0,1 };
 
 static int scaffoldGraph(ScaffoldType _type) {
 	static int graph[(unsigned)ScaffoldType::ALLNUM] = {};

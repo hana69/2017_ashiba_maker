@@ -7,12 +7,11 @@ struct NecessaryInfoToMake {
 };
 
 class CScaffold {
-	
 public:
 	CScaffold();
 	CScaffold(ScaffoldType,int _xPlace,int _yPlace);
 	void Draw(int _scroll);
-	void Move(int _limit);
+	void Move(int _limit,bool underSea);
 	void HitEffect();
 
 	ScaffoldType Type() { return type; };

@@ -5,7 +5,11 @@
 class CMe;
 class CCoin;
 class Pause;
+class GameOverMenu;
+class GameClearMenu;
 class CScaffold;
+class SaveData;
+
 
 class CActionField{
 public:
@@ -21,9 +25,10 @@ public:
 	bool MeGotCoin() { return coinGotFlag; };
 	bool MenuOpening(){ return menuOpening; };
 
-	bool SelectedReturnStart() { return returnStartFlag; };
+	bool SelectedReturnStart() {return returnStartFlag; };
 	bool SelectedReturnTitle() { return returnTitleFlag; };
-	
+	bool SelectedGoToNextStage() { return goToNextStageFlag; };
+
 	bool GameOvered();
 	bool GameCleared();
 
@@ -52,9 +57,11 @@ private:
 	int height;
 
 	bool isTutorial;
+	bool underSea;
 	
 	bool returnTitleFlag;
 	bool returnStartFlag;
+	bool goToNextStageFlag;
 	bool coinGotFlag;
 	bool menuOpening;
 
@@ -64,8 +71,14 @@ private:
 	CMe* me;
 	CCoin* coin;
 	Pause* pauseMenu;
+	GameOverMenu* gameOverMenu;
+	GameClearMenu* gameClearMenu;
+
+	void (CActionField::*gameClearFuncs[2])();
+	void (CActionField::*gameOverFuncs[2])();
 	void (CActionField::*pauseFuncs[3])();
-	void ReturnToTitle();
-	void ReturnToStart();
-	void Resume();
+		void ReturnToTitle();
+		void ReturnToStart();
+		void Resume();	
+		void GoToNextStage();
 };

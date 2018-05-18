@@ -1,17 +1,44 @@
 #pragma once
-class CTutorial {
+
+class CActionField;
+class CScaffoldMaker;
+
+class Tutorial {
 public:
-	CTutorial();
+	Tutorial();
+	~Tutorial();
 	void Start();
-	void Update(int _scroll,int _x);
+	void Update();
 	bool Explaining(){return explaining;}
-	int State() { return state; };
-	void DrawEndEffect();
+	enum class ExplainState{
+		FIRST,
+		ROAD_IS_BROKEN,
+		LETS_CLICK,
+		MP_DECREASE,
+		SCROLL,
+		DISCOVER_COIN,
+		MP_GAIN,
+		GO_TROUGH_SINLE_HOLE,
+		HAVETO_JUMP,
+		HAVETO_ERASER,
+		GOAL
+	} State() { return state; };
 private:
-	void Draw(int _scroll);
-	void ExplainingNext(int _scroll);
-	void UnExplainingNext(int _scroll,int _x);
-	int state;
+	void StateFunc();
+	bool drawFlag;
+	void DrawBack();
+	void Scroll();
+	int scroll;
+
+	CActionField* field;
+	CScaffoldMaker* maker;
+	int backGraph;
+
+	ExplainState state;
+
 	bool explaining;
+	bool meMoveFlag;
+	bool scrollFlag;
+
 	static int graph[30];
 };

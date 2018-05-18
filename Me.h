@@ -2,10 +2,13 @@
 #include"scaffold.h"
 #include"Coin.h"
 
+//class SaveData;
+
 class CMe {
 public:
-	CMe();
-	void SetV();
+	CMe(int _stageNum);
+	~CMe();
+	void SetV(bool);
 	void Move();
 	void ResetV();
 
@@ -24,8 +27,12 @@ public:
 
 	int X() { return x; };
 	int Y() { return y; };
+
+	int Duration() { return duration; };
 private:
 	void HitEffect(ScaffoldType,int _x,int _y);
+
+//	SaveData* sd;
 
 	bool hitUnderSide;
 	bool hitOverSide;
@@ -36,6 +43,10 @@ private:
 	
 	bool gameOver;
 	bool gameClear;
+
+	const int stageNum;
+	int startTime;//スタート時の時間を記録
+	int duration;
 
 	int graph;
 	float x,y;

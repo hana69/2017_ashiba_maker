@@ -2,16 +2,20 @@
 #include"ClickObj.h"
 #include"General.h"
 
-Menu::Menu(int _x,int _y)
-	:x(_x),y(_y)
+Menu::Menu(int _x,int _y, int _backGraph)
+	:x(_x),y(_y),backGraph(_backGraph)
 {}
 
 void Menu::Update() {
-	DrawBox(x, y, x + 200, y + 150, BLACK, true);
-	DrawBox(x, y, x + 200, y + 150, YELLOW, false);
+	Draw();
+//DrawBox(x, y, x + 200, y + 150, BLACK, true);
+//	DrawBox(x, y, x + 200, y + 150, YELLOW, false);
 	for (auto i:texts) {
 		i->Update();
 	}
+}
+void Menu::Draw() {
+	DrawGraph(x,y,backGraph,true);
 }
 Menu::~Menu() {
 	for (auto i : texts) {
@@ -20,7 +24,8 @@ Menu::~Menu() {
 }
 
 Pause::Pause()
-	:Menu(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 75),selectedText(Texts::RESUME)
+	:Menu(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 75,LoadGraph("noseResource/PauseBack.png")),
+	selectedText(Texts::RESUME)
 {
 	int graph[(unsigned)Texts::MAX][4] = {};
 	int w = 173;
@@ -45,7 +50,57 @@ bool Pause::Selected() {
 	return false;
 }
 
+GameOverMenu::GameOverMenu()
+:Menu(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 - 75, LoadGraph("noseResource/GameOverBack.png")),
+selectedText(Texts::RETURN_TO_START)
+{
+	int graph[(unsigned)Texts::MAX][4] = {};
+	const int w = 173;
+	LoadDivGraph("noseResource/ReturnToStart_4in1.png", 4, 1, 4, w, 20, graph[(unsigned)Texts::RETURN_TO_START]);
+	LoadDivGraph("noseResource/ReturnToTitle_4in1.png", 4, 1, 4, w, 20, graph[(unsigned)Texts::RETURN_TO_TITLE]);
+	//const int c = WINDOW_WIDTH / 2;
+	texts.push_back(new ClickObj(x + 10, y + 120, x + 10 + w, y + 120 + 20, graph[(unsigned)Texts::RETURN_TO_START]));
+	texts.push_back(new ClickObj(x + 210, y + 120, x + 210 + w, y + 120 + 20, graph[(unsigned)Texts::RETURN_TO_TITLE]));
+}
+bool GameOverMenu::Selected() {
+	for (int i = 0; i < /*(int)Texts::MAX*/texts.size(); i++) {
+		if (texts[i]->Clicked()) {
+			selectedText = (Texts)i;
+			return true;
+		}
+	}
+	return false;
+}
 
+GameClearMenu::GameClearMenu(int _stageNum)
+	:Menu(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 - 75, LoadGraph("noseResource/GameClearBack.png")),
+	selectedText(Texts::RETURN_TO_TITLE),
+	stageNum(_stageNum)
+{
+	int graph[(unsigned)Texts::MAX][4] = {};
+	LoadDivGraph("noseResource/ReturnToTitle_4in1.png", 4, 1, 4, 173, 20, graph[(unsigned)Texts::RETURN_TO_TITLE]);
+	LoadDivGraph("noseResource/NextStage_4in1.png", 4, 1, 4, 150, 20, graph[(unsigned)Texts::GO_TO_NEXT_STAGE]);
+	texts.push_back(new ClickObj(x + 10, y + 120, x + 10 + 173, y + 120 + 20, graph[(unsigned)Texts::RETURN_TO_TITLE]));
+	texts.push_back(new ClickObj(x + 210, y + 120, x + 210 + 150, y + 120 + 20, graph[(unsigned)Texts::GO_TO_NEXT_STAGE]));
+}
+bool GameClearMenu::Selected() {
+	for (int i = 0; i < /*(int)Texts::MAX*/texts.size(); i++) {
+		if (texts[i]->Clicked()) {
+			selectedText = (Texts)i;
+			return true;
+		}
+	}
+	return false;
+}
+
+void GameClearMenu::Update() {
+	Menu::Draw();
+	for (int i = 0; i < (int)Texts::MAX;i++) {
+		if (stageNum!=FINALSTAGE_NUM || (Texts)i != Texts::GO_TO_NEXT_STAGE) {
+			texts[i]->Update();
+		}
+	}
+}
 //CMenu::CMenu() 
 //	:selectingState(RESUME),
 //	x(WINDOW_WIDTH / 2 - 100),y(WINDOW_HEIGHT / 2 - 75)
