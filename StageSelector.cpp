@@ -2,8 +2,10 @@
 #include"StageSelector.h"
 #include"General.h"
 
-StageSelector::StageSelector()
-	:selectingStageNum(TUTORIAL), nowSelectableStageNumMax(FINALSTAGE_NUM)
+StageSelector::StageSelector(int _finalStageNum)
+	:selectingStageNum(TUTORIAL), 
+	nowSelectableStageNumMax(_finalStageNum),
+	ver2Graph(LoadGraph("noseResource/ver2.png"))
 {
 	SetFontSize(68);
 	ChangeFontType(DX_FONTTYPE_ANTIALIASING_4X4);
@@ -12,7 +14,7 @@ void StageSelector::Update() {
 	SelectStageByMouse();
 	static int explainGraph = LoadGraph("noseResource/title_explain.png");
 	DrawGraph(0, 0, explainGraph, true);
-
+	DrawGraph(736, 364, ver2Graph, true);
 	/////////////////élã˜Ç…ë´èÍÇÃâÊëúÇï\é¶/////////////////////////////////////
 	DrawGraph(0, 0, scaffoldGraph(ScaffoldType::NORMAL), true);
 	DrawGraph(WINDOW_WIDTH - 50, 0, scaffoldGraph(ScaffoldType::SPEED_UP), true);

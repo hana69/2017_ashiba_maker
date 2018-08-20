@@ -4,7 +4,7 @@ class CScaffoldMaker;
 
 class Stage{
 public:
-	Stage(int _stageNum);
+	Stage(int _stageNum,int _finalStageNum);
 	~Stage();
 	void Update();
 	bool SelectedReturnTitle();

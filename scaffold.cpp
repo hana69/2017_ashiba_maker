@@ -18,7 +18,7 @@ void CScaffold::Draw(int _scroll) {
 
 void CScaffold::Move(int _limit,bool underSea) {
 	if (underSea) {
-		y -= 0.07;
+		y -= 0.1;
 	}
 	else {
 		y -= 0.2;

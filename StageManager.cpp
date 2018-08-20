@@ -6,11 +6,16 @@
 
 #include"Tutorial.h"
 
-StageManager::StageManager() 
+StageManager::StageManager()
 	:stageSelecting(true),
 	isTutorial(false),
-	stageSelector(new StageSelector()),stage(nullptr),tutorial(nullptr)
-{}
+	stage(nullptr), tutorial(nullptr)
+{
+	fopen_s(&fp, "noseResource/saveData.txt", "r");
+	fscanf(fp, "%d", &finalStageNum);
+	fclose(fp);
+	stageSelector = new StageSelector(finalStageNum);
+}
 StageManager::~StageManager() {
 	if (stage!=nullptr) {
 		delete stage;
@@ -27,8 +32,9 @@ void StageManager::UpDate() {
 	if (stageSelecting) {
 		stageSelector->Update();
 		if (stageSelector->SelectFinished()) {
+
 			if (stageSelector->SelectedStage()!=0) {
-				stage = new Stage(stageSelector->SelectedStage());
+				stage = new Stage(stageSelector->SelectedStage(),finalStageNum);
 				stageSelecting = false;
 				nowPlayingStageNum = stageSelector->SelectedStage();
 				delete stageSelector;
@@ -47,21 +53,32 @@ void StageManager::UpDate() {
 	else{
 		if (isTutorial) {
 			tutorial->Update();
+			if (tutorial->SelectedReturnTitle()) {
+				stageSelector = new StageSelector(finalStageNum);
+				stageSelecting = true;
+				delete tutorial; tutorial = nullptr;
+			}
+			else if (tutorial->SelectedNextStage()) {
+				delete tutorial; tutorial = nullptr;
+				nowPlayingStageNum = 1;
+				stage = new Stage(nowPlayingStageNum,finalStageNum);
+				isTutorial = false;
+			}
 		}
 		else {
 			stage->Update();
 			if (stage->SelectedReturnTitle()) {
-				stageSelector = new StageSelector();
+				stageSelector = new StageSelector(finalStageNum);
 				stageSelecting = true;
 				delete stage;
 				stage = nullptr;
 			}
 			else if (stage->SelectedGoToNextStage()) {
 				delete stage;
-				if (nowPlayingStageNum < FINALSTAGE_NUM) {
+				if (nowPlayingStageNum < finalStageNum) {
 					nowPlayingStageNum++;
 				}
-				stage = new Stage(nowPlayingStageNum);
+				stage = new Stage(nowPlayingStageNum,finalStageNum);
 			}
 		}
 		

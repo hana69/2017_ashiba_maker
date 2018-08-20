@@ -46,7 +46,7 @@ private:
 class GameClearMenu:public Menu {
 public:
 	GameClearMenu(int _stageNum);
-	void Update();
+	void Update(int _finalStageNum);
 	bool Selected();
 	enum class Texts {
 		RETURN_TO_TITLE,

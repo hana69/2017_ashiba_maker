@@ -18,6 +18,22 @@ static int PlusMinus(int _x) {
 
 class MPGage;
 
+class CSelectableObj {
+public:
+	CSelectableObj();
+	void SetType(ScaffoldType _type) { type = _type; };//配列のコンストラクタが呼び出せないので応急処置
+	void Draw(int _costNum);
+	void DrawSelecting();
+	void SetPosition(int, int);
+	void Select(ScaffoldType*, int _point);
+	ScaffoldType Type() { return type; };
+private:
+	static int selecting, pointing;
+	ScaffoldType type;
+	int x, y;
+	CMouse Mouse;
+};
+
 class CScaffoldSelector {
 public:
 	CScaffoldSelector(int _x1, int _y1, int _x2, int _y2);
@@ -31,22 +47,8 @@ private:
 	int x1, y1, x2, y2;
 	bool init;//最初はfalse,Init呼出し後true
 	ScaffoldType selectingType;
-	static int selecting,pointing;
-
-	class CSelectableObj {
-	public:
-		CSelectableObj();
-		void SetType(ScaffoldType _type) { type = _type; };//配列のコンストラクタが呼び出せないので応急処置
-		void Draw(int _costNum);
-		void DrawSelecting();
-		void SetPosition(int, int);
-		void Select(ScaffoldType*,int _point);
-		ScaffoldType Type() { return type; };
-	private:
-		ScaffoldType type;
-		int x, y;
-		CMouse Mouse;
-	}selectableObj[4];
+	
+	CSelectableObj selectableObj[4];
 };
 
 class CScaffoldMaker {

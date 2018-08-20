@@ -1,9 +1,8 @@
 #pragma once
 #include"mouse.h"
-
 class StageSelector {
 public:
-	StageSelector();
+	StageSelector(int _finalStageNum);
 	void Update();
 	bool SelectFinished();
 	int SelectedStage() {
@@ -11,6 +10,7 @@ public:
 	};
 private:
 	CMouse mouse;
+	int ver2Graph;
 	void SelectStageByMouse();
 	int selectingStageNum;
 	int nowSelectableStageNumMax;

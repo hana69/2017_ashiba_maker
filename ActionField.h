@@ -13,7 +13,7 @@ class SaveData;
 
 class CActionField{
 public:
-	CActionField(int _stageNum);
+	CActionField(int _stageNum,int _finalStageNum);
 	~CActionField();
 	
 	void Update(int _scroll);
@@ -33,19 +33,24 @@ public:
 	bool GameCleared();
 
 	void CloseMenu() { menuOpening = false; };
+	void DrawMenu();
 
 	void OnlyDraw(int _scroll);
 
 	int RightEdge() { return width; };
-	int MeX();
+	int MeX(),MeY();
 private:
 	void MenuButtonUpdate();
 	void Draw(int _scroll);
 		void DrawLimit(int _scroll);
 	void Collision();
+		void ScaffoldCollision();
+		void CoinCollision();
 		void EraserCollision();
 		
 	void Move();
+
+	const int finalStageNum;
 
 	CScaffold* firstSc[500][15];
 	bool firstPut[500][15];
@@ -65,8 +70,8 @@ private:
 	bool coinGotFlag;
 	bool menuOpening;
 
-	static int limitdata[10];
-	static int mapdata[10];
+	static int limitdata[100];
+	static int mapdata[100];
 
 	CMe* me;
 	CCoin* coin;

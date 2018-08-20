@@ -9,6 +9,8 @@ public:
 	~Tutorial();
 	void Start();
 	void Update();
+	bool SelectedReturnTitle();
+	bool SelectedNextStage();
 	bool Explaining(){return explaining;}
 	enum class ExplainState{
 		FIRST,
@@ -18,10 +20,22 @@ public:
 		SCROLL,
 		DISCOVER_COIN,
 		MP_GAIN,
-		GO_TROUGH_SINLE_HOLE,
+		HOLE_AGAIN,
+		BUT,
+		GO_THROUH_SINGLE_HOLE,
+		HAVETO_MAKE,
+		WALL_AND_SINGLE_HOLE,
+		FALL,
+		FILL_SINGLE_HOLE,
+		STILL_THERE_IS_WALL,
+		HAVETO_ERASE,
+		FOUND_STEP,
+		VARIOUS_SCAFFOLD,
+		CLICK_TO_SELECT,
+		SELECT_JUMP,
 		HAVETO_JUMP,
-		HAVETO_ERASER,
-		GOAL
+		GOAL,
+		MENU
 	} State() { return state; };
 private:
 	void StateFunc();

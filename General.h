@@ -47,7 +47,7 @@ static bool EscapeProgram(const char* _mes,bool escapeScene=false) {
 
 /////ƒQ[ƒ€—p’è”/////
 const int TUTORIAL = 0;
-const int FINALSTAGE_NUM = 9;
+//const int FINALSTAGE_NUM = 10;
 
 enum class ScaffoldType {
 	JUMP,

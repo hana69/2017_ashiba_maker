@@ -11,24 +11,21 @@ public:
 	void SetV(bool);
 	void Move();
 	void ResetV();
-
-	void ResetHit() { 
-		hitUnderSide = false;
-		hitOverSide = false;
-	};
+	void ResetHit();
 
 	void Restart();
 
 	void Draw(int _scroll);
-	bool CollidedWith(CScaffold* _sc);
+	
+	void CollideWith(CScaffold* _sc);
 
 	bool GameOver() { return gameOver; };
 	bool GameClear() { return gameClear; };
 
-	int X() { return x; };
-	int Y() { return y; };
+	float X() { return x; };
+	float Y() { return y; };
 
-	int Duration() { return duration; };
+//	int Duration() { return duration; };
 private:
 	void HitEffect(ScaffoldType,int _x,int _y);
 
@@ -45,8 +42,9 @@ private:
 	bool gameClear;
 
 	const int stageNum;
-	int startTime;//スタート時の時間を記録
-	int duration;
+	
+	//int startTime;//スタート時の時間を記録
+	//int duration;
 
 	int graph;
 	float x,y;

@@ -1,5 +1,5 @@
 #pragma once
-
+#include<stdio.h>
 class StageSelector;
 class Stage;
 class Tutorial;
@@ -10,6 +10,8 @@ public:
 	~StageManager();
 	void UpDate();
 private:
+	int finalStageNum;
+	FILE* fp;
 	StageSelector* stageSelector;
 	Stage* stage;
 	Tutorial* tutorial;

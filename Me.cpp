@@ -5,13 +5,12 @@
 CMe::CMe(int _stageNum) 
 	:x(0),y(0),
 	vx(0),vy(0),
-	gameOver(false),
-	gameClear(false),
+	gameOver(false),gameClear(false),
 	hitUnderSide(false),
 	pressedDie(false),
 	stageNum(_stageNum),
-	startTime(GetNowCount()),
-	duration(10000),
+//	startTime(GetNowCount()),
+//	duration(10000),
 	//sd(new SaveData("noseResource/saveData.txt") ),
 	graph(LoadGraph("noseResource/trokko_Draw_5.png"))
 {}
@@ -22,11 +21,11 @@ CMe::~CMe(){
 
 void CMe::SetV(bool underSea) {
 	if (underSea) {
-		vx = 1.0f;
+		vx = 0.8f;
 		vy += 0.1f;
 	}
 	else {
-		vx = 1.5f;
+		vx = 1.0f;
 		vy += 0.2f;
 	}
 }
@@ -53,6 +52,10 @@ void CMe::ResetV() {
 	vx = 0;
 	//vy = 0;
 }
+void CMe::ResetHit() {
+	hitUnderSide = false;
+	hitOverSide = false;
+}
 
 void CMe::Restart() {
 	gameOver = false;
@@ -63,7 +66,7 @@ void CMe::Restart() {
 	vy = 0;
 	hitUnderSide = false;
 	pressedDie = false;
-	startTime = GetNowCount();
+	//startTime = GetNowCount();
 }
 
 void CMe::Draw(int _scroll){
@@ -75,13 +78,12 @@ void CMe::Draw(int _scroll){
 	}
 }
 
-bool CMe::CollidedWith(CScaffold* _sc) {
-	if (_sc->Type()!=ScaffoldType::ERASER) {
+void CMe::CollideWith(CScaffold* _sc) {
+	if (_sc->Type() != ScaffoldType::ERASER) {
 		if (_sc->Y() * 50 < y + 50 && _sc->Y() * 50 + 50 > y) {
 			if (x + 50 <= _sc->X() * 50 && x + vx + 50 >= _sc->X() * 50) {
 				vx = 0;
 				x = _sc->X() * 50 - 50;
-				return true;
 			}
 		}
 		if (_sc->X() * 50 < x + 50 && _sc->X() * 50 + 50 > x) {
@@ -96,41 +98,41 @@ bool CMe::CollidedWith(CScaffold* _sc) {
 					hitOverSide = true;
 					diedScDownY = _sc->Y() * 50;
 					y = _sc->Y() * 50 - 50;
-					HitEffect(_sc->Type(), _sc->X(), _sc->Y());
 				}
-				
-				if (hitUnderSide && hitOverSide && diedScDownY-diedScUpY < 50) {
+				if (hitUnderSide && hitOverSide && diedScDownY - diedScUpY < 50) {
 					if (!gameOver) {
 						pressedDie = true;
 						gameOver = true;
 						vy = 0;
 					}
 				}
-				return true;
+			}
+			if (_sc->Y() * 50 <= y + 50 && _sc->Y() * 50 + 50 >= y) {
+				if (y < _sc->Y() * 50) {
+					HitEffect(_sc->Type(), _sc->X(), _sc->Y());
+				}
 			}
 		}
 	}
-	
-	return false;
 }
 
 void CMe::HitEffect(ScaffoldType _type,int _x,int _y) {
 	switch (_type) {
 	case ScaffoldType::JUMP:
-		vy -= 7;
+		vy = -7;
 		break;
 	case ScaffoldType::SPEED_UP:
-		vx = 4;
+		vx = 3;
 		break;
 	case ScaffoldType::SPEED_DOWN:
-		vx = 0.5;
+		vx = 0.35;
 		break;
 	case ScaffoldType::GOAL:
 		if (x+vx >= _x*50) {
 			x = _x*50;
 			gameClear = true;
 			vx = 0;
-			duration = GetNowCount() - startTime;
+		//	duration = GetNowCount() - startTime;
 		//	if (sd->Data(stageNum) > duration) {
 		//		sd->SetData(stageNum,duration);
 			//}

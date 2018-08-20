@@ -3,10 +3,10 @@
 #include"ActionField.h"
 #include"ScaffoldMaker.h"
 
-Stage::Stage(int _stageNum)
+Stage::Stage(int _stageNum,int _finalStageNum)
 	:scroll(0),
-	field(new CActionField(_stageNum)),maker(new CScaffoldMaker()),
-	backGraph(_stageNum<9 ? LoadGraph("noseResource/normalBack.png"):LoadGraph("noseResource/seaBack.png"))
+	field(new CActionField(_stageNum,_finalStageNum)),maker(new CScaffoldMaker()),
+	backGraph(_stageNum>=15 ? LoadGraph("noseResource/seaBack.png"): LoadGraph("noseResource/normalBack.png"))
 {
 	SetFontSize(15);
 }

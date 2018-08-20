@@ -9,11 +9,11 @@ MPGage::MPGage(int _x, int _y)
 
 void MPGage::Update(int _nowPoint,bool _pushing, ScaffoldType _type) {
 	DrawBox(x, y-300, x + 30, y, BLACK, true);
-	
-	DrawBox( x , y - _nowPoint*6 , x + 30 , y , GREEN, true);
+	DrawBox(x, y - _nowPoint * 6, x + 30, y, GREEN, true);
 	
 	if (_pushing) {
-		DrawBox(x, min(y - _nowPoint * 6,WINDOW_HEIGHT), x + 30, y - _nowPoint * 6 + scaffoldCost[(unsigned)_type]*6, RED, true);
+		DrawBox(x, y - _nowPoint * 6, x + 30, min(y - _nowPoint * 6 + scaffoldCost[(unsigned)_type]*6,y), RED, true);
+
 	}
 
 	DrawBox(x, y - 300, x + 30, y, WHITE, false);

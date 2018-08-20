@@ -6,15 +6,16 @@
 #include"Menu.h"
 #include"SaveData.h"
 
-int CActionField::limitdata[10] = {};
-int CActionField::mapdata[10] = {};
-CActionField::CActionField(int _stageNum) 
-	:width(200),height( (WINDOW_HEIGHT-280) / 50 ),
-	isTutorial(_stageNum==0),underSea(_stageNum>8),
+int CActionField::limitdata[100] = {};
+int CActionField::mapdata[100] = {};
+CActionField::CActionField(int _stageNum,int _finalStageNum) 
+	:width(200),height( 11 ),
+	isTutorial(_stageNum==0),underSea(_stageNum>=15),
 	returnStartFlag(false),returnTitleFlag(false),menuOpening(false),
 	coinGotFlag(false),goToNextStageFlag(false),
 	coin(new CCoin(width)),me(new CMe(_stageNum)),
-	pauseMenu(new Pause()),gameOverMenu(new GameOverMenu()),gameClearMenu(new GameClearMenu(_stageNum))
+	pauseMenu(new Pause()),gameOverMenu(new GameOverMenu()),gameClearMenu(new GameClearMenu(_stageNum)),
+	finalStageNum(_finalStageNum)
 {
 	//îzóÒÇÃèâä˙âª
 	for (int i = 0; i < 500; i++) {
@@ -115,7 +116,7 @@ void CActionField::Update(int _scroll){
 	coinGotFlag = false;
 	if (me->GameClear()) {
 		Draw(_scroll);
-		gameClearMenu->Update();
+		gameClearMenu->Update(finalStageNum);
 		if (gameClearMenu->Selected()) {
 			(this->*gameClearFuncs[(unsigned)gameClearMenu->SelectedText()])();
 		}
@@ -149,6 +150,7 @@ void CActionField::Update(int _scroll){
 }
 
 void CActionField::OnlyDraw(int _scroll) {
+	coinGotFlag = false;
 	DrawBox(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25, ORANGE, true);
 	DrawBox(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25, WHITE, false);
 	DrawLimit(_scroll);
@@ -161,6 +163,8 @@ void CActionField::OnlyDraw(int _scroll) {
 	coin->Draw(_scroll);
 	static int menuGraph = LoadGraph("noseResource/menuBottun.png");
 	DrawGraph(WINDOW_WIDTH - (20 * 2 + 50) + 10, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, menuGraph, true);
+	MenuButtonUpdate();
+	
 }
 
 void CActionField::Make(int _x,int _y,ScaffoldType _type,int _scroll) {
@@ -203,6 +207,14 @@ void CActionField::Restart() {
 bool CActionField::GameOvered() { return me->GameOver(); };
 bool CActionField::GameCleared() { return me->GameClear(); };
 
+void CActionField::DrawMenu() {
+	if (menuOpening) {
+		pauseMenu->Update();
+		if (pauseMenu->Selected()) {
+			(this->*pauseFuncs[(unsigned)pauseMenu->SelectedText()])();
+		}
+	}
+}
 void CActionField::MenuButtonUpdate() {
 	DrawBox(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25, ORANGE, true);
 	DrawBox(WINDOW_WIDTH - (20 * 2 + 50) + 6, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 47, WINDOW_WIDTH - (20 * 2 + 50) + 83, WINDOW_HEIGHT - (50 * 4 + 20 * 5) - 25, WHITE, false);
@@ -222,49 +234,33 @@ void CActionField::MenuButtonUpdate() {
 }
 
 void CActionField::Collision() {
-	if (me->X() % 50 == 0) {//ÇøÇÂÇ§Ç«ã´ñ⁄Ç…Ç¢ÇÈÇ∆Ç´
-		for (int j = 0; j < 15;j++) {
-			for (int i = 0; i < 2; i++) {
-				if ( j < sc[me->X() / 50 + i].size()) {
-					if (me->CollidedWith(sc[me->X() / 50 + i][j])) {
-						//sc[me->X() / 50][0]->HitEffect();
-						if (me->GameOver()) {
-							break;
-						}
-					}
-				}
-			}
-		}	
-	}
-	else {
-		for (int j = 0; j < 15 && !me->GameOver(); j++) {
-			for (int i = 0; i < 3 && !me->GameOver(); i++) {
-				if (j < sc[me->X() / 50 + i].size()) {
-					if (me->CollidedWith(sc[me->X() / 50 + i][j])) {
-						//sc[me->X() / 50 + i][0]->HitEffect();
-					}
-				}
-			}
-		}
-	}
-
-	for (int i = (int)(me->X() / 50); i < me->X()/50 + 2; i++) {
-		for (int j = (int)(me->Y() / 50); j < me->Y()/50 + 2; j++) {
-			if (coin->Valid(i, j)) {
-				coin->Delete(i, j);
-				coinGotFlag = true;
-			}
-		}
-	}
-
 	EraserCollision();
+	ScaffoldCollision();
+	CoinCollision();
 }
-	void CActionField:: EraserCollision() {
+	void CActionField::ScaffoldCollision() {
+		for (int i = 0; i < 3 && !me->GameOver(); i++) {
+			for (int j = 0; j < sc[(int)me->X() / 50 + i].size() && !me->GameOver(); j++) {
+				me->CollideWith(sc[(int)me->X() / 50 + i][j]);
+			}
+		}
+	}
+	void CActionField::CoinCollision() {
+		for (int i = (int)(me->X() / 50); i < me->X() / 50 + 1; i++) {
+			for (int j = (int)(me->Y() / 50); j < me->Y() / 50 + 1; j++) {
+				if (coin->Valid(i, j)) {
+					coin->Delete(i, j);
+					coinGotFlag = true;
+				}
+			}
+		}
+	}
+	void CActionField::EraserCollision() {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < sc[i].size(); j++) {
 				if (sc[i][j]->Type() == ScaffoldType::ERASER) {
 					if (j != 0) {//è„ë§ÇÃÇ‚Ç¬Çè¡Ç∑èàóù
-						if (sc[i][j - 1]->Y() * 50 + 50 > sc[i][j]->Y() * 50) {
+						if (sc[i][j - 1]->Y() * 50 + 50 > sc[i][j]->Y() * 50 && sc[i][j-1]->Type()!=ScaffoldType::GOAL) {
 							delete sc[i][j - 1];
 							for (int k = j - 1; k < sc[i].size() - 1; k++) {
 								sc[i][k] = sc[i][k + 1];
@@ -321,9 +317,8 @@ void CActionField::Move() {
 	me->Move();
 }
 
-
 int CActionField::MeX() { return me->X(); };
-
+int CActionField::MeY() { return me->Y(); };
 void CActionField::ReturnToTitle() {
 	returnTitleFlag = true;
 }
